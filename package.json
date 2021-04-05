@@ -23,7 +23,8 @@
     "content-disposition": "^0.5.3",
     "cookie": "^0.4.1",
     "accepts": "^1.3.7",
-    "content-type": "^1.0.4"
+    "content-type": "^1.0.4",
+    "cookie-signature": "^1.1.0"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
