@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTML5 Rubik's cube (CSS3 + JS)</title>
+    <meta property="og:title" content="3D HTML5 Rubik&#039;s Cube" />
+    <meta property="og:type" content="product" />
+    <meta property="og:url" content="http://html5rubik.com" />
+    <meta property="og:image" content="http://html5rubik.com/img/rotate.png" />
+    <meta property="og:site_name" content="3D HTML5 Rubik&#039;s cube" />
+    <meta property="fb:admins" content="1220708115" />
+
+    <meta name = "viewport" content = "user-scalable=no">
+    <meta name = "description" content = "Rubik's cube in HTML5 (CSS3 + JavaScript)">
+    <meta name = "keywords" content = "html5, CSS3, rubik's,cube, 3D, rubik, Javascript, YUI, Mojito">
+    <meta charset="UTF-8" />
+    
+
+    <script src="js/helper-modules.js"></script>
+     <link rel="stylesheet" href="css/style.css" />
+  <script src="js/components/socket.io.js"></script>
+  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script> 
+
+</head>
+<body>
+<header>
+ 
+</header>
+ 
+  <script>
+  
+  
+  
+  
+       
+  $(document).ready(function() {   
+    
+    
+    
+    
+
+const Cubes = document.getElementById("cubes");
+
+  var i = 0;
+  for (i = 0; i < 16; i++) {
+  var RubikID =  "rubik-"+ "0" ;
+  var LabelText = "Open Tap"; 
+var iframe = createElement("iframe",{"src":"rubik.html", "title":"description"+RubikID}),
+    newListItem = createElement("div",{"id":RubikID },[iframe]);
+    Cubes.appendChild(newListItem);
+  }
+
+});
+    
+  </script> 
+  <div id="cubes">
+    
+  
+  </div>
+  
+  
+  
+</body>
+
+</html>

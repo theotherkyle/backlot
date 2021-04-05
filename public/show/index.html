@@ -12,14 +12,14 @@
 
     <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
     <!-- import the webpage's stylesheet -->
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/player-style.css">
 
     <!-- import the webpage's client-side javascript file -->
     
     
-  <script src="js/components/socket.io.js"></script>
-    <script src="js/helper-modules.js"></script>
-    <script src="/script.js" defer></script>
+  <script src="../js/components/socket.io.js"></script>
+    <script src="../js/helper-modules.js"></script>
+    <script src="../show-script.js" defer></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script> 
 
@@ -28,32 +28,42 @@
   
    var socket = io();
        
-  $(document).ready(function() {   
-      $('#changeBefore').click(function(){
-      socket.emit('control-message', "start-show");
-         });
-    $('#open-tap-000').click(function(){
-      socket.emit('control-message', "start-show");
-    });
-      $('#open-tap-0001').click(function(){
-      socket.emit('control-message', "start-show");
-    });
-   });
+  $(document).ready(function() {   });
+  
     </script> 
     
     
   </head>
   <body>
     <header>
-      <h1>Backlot Control Panel</h1>
+      <h1>Show Simulation Viewer</h1>
     </header>
 
     <main>
+      
+      
+      
+      <form>
+      
+      
+        <label>
+          Show ID
+          <input name="dream" type="text" maxlength="100" required placeholder="Show ID">
+        </label>
+            <label>
+          Group ID
+          <input name="group" type="text" maxlength="100" required placeholder="Group ID">
+        </label>
+        <label>
+          Player ID
+          <input name="player" type="text" maxlength="100" required placeholder="Player ID">
+        </label>
+        <button type="submit" id="submit-dream">Enter Show</button>
+      </form>
+      
       <form>
       
         <div id="BarConfiguration"></div>
-        <div id="DoorsConfiguration"></div>
-        <div id="TablesConfiguration"></div>
         
       </form>
 

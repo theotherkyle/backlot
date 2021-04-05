@@ -17,6 +17,7 @@
     <!-- import the webpage's client-side javascript file -->
     
     
+    <link rel="stylesheet" href="css/style.css">
   <script src="js/components/socket.io.js"></script>
     <script src="js/helper-modules.js"></script>
     <script src="/script.js" defer></script>
@@ -45,15 +46,23 @@
   </head>
   <body>
     <header>
-      <h1>Backlot Control Panel</h1>
+      <h1>A Dream of the Future</h1>
     </header>
 
     <main>
+      <h2>Oh hi,</h2>
+
+      <p>Tell me your hopes and dreams:</p>
+
       <form>
-      
+        <label>
+          New Dream
+          <input name="dream" type="text" maxlength="100" required placeholder="Dreams!">
+        </label>
+        
+        <button type="submit" id="submit-dream">Add Dream</button>
+       
         <div id="BarConfiguration"></div>
-        <div id="DoorsConfiguration"></div>
-        <div id="TablesConfiguration"></div>
         
       </form>
 
@@ -64,7 +73,11 @@
       </section>
     </main>
 
-    <footer></footer>
+    <footer>Made with <a href="https://glitch.com">Glitch</a>!</footer>
 
+    <!-- include the Glitch button to show what the webpage is about and
+          to make it easier for folks to view source and remix -->
+    <div class="glitchButton" style="position:fixed;top:2em;right:20px;"></div>
+    <script src="https://button.glitch.me/button.js" defer></script>
   </body>
 </html>

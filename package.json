@@ -7,10 +7,27 @@
   "description": "A simple Node app built on Express, instantly up and running.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "cp-core": "ncp node_modules/opentok-accelerator-core/browser/opentok-acc-core.js public/js/components/opentok-acc-core.js",
+    "socket-io": "ncp node_modules/socket.io-client/dist/socket.io.js public/js/components/socket.io.js",
+    "build": "mkdirp public/js/components  && npm run cp-core  && npm run socket-io"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "socket.io": "^3.1.1",
+    "socket.io-client": "^4.0.0",
+    "opentok-accelerator-core": "^2.0.15"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
+    "mkdirp": "^0.5.1",
+    "ncp": "^2.0.0"
   },
   "engines": {
     "node": "12.x"
