@@ -191,7 +191,7 @@ function CreateNewShowSession (ID)
 {
   
   var myShowSession = new ShowSessionClass(ID);
-  activeShowSessions.push({"ID":ID, "State":""}); 
+  activeShowSessions.push({"ID":ID, "State":myShowSession.getState()}); 
   activeShowSessionsRef.push({"ID":ID, "State":"", "session":myShowSession}); 
 //  myShowSession.getState();
   
@@ -203,7 +203,7 @@ function CreateNewShowSession (ID)
      // console.log('myShowSession -- ShowStateChange');
       io.in("show"+ID).emit('show-state-change', " ");
     
-      activeShowSessions[ID]["State"] = myShowSession.getState(); 
+     // activeShowSessions[ID]["State"] = myShowSession.getState(); 
 
 });  
   
@@ -226,7 +226,7 @@ ShowStateRequests.forEach(element => {
 
 var PulseTimeout = null; 
 var AttractionRunning = false; 
-const StartPulseRate = 0; 
+const StartPulseRate = 500; 
 const PulseRate = 15000; 
 const NumberOfShows = 48;   
 var CurrentShow = 0;  
