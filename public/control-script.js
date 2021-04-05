@@ -506,6 +506,8 @@ Build();
    //$().
    console.log(msg);
    
+  socket.emit('join-controllers', {"ControllerID":"12"}); 
+   
    var TapID = "tap-"+msg.id+"Status"; 
    var TapIDButton = "button-tap-"+msg.id; 
    var className = "status_"+ msg.command;

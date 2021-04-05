@@ -224,6 +224,7 @@ ShowStateRequests.forEach(element => {
 
 }
 
+var PulseTimeout = null; 
 var AttractionRunning = false; 
 const StartPulseRate = 0; 
 const PulseRate = 15000; 
@@ -239,7 +240,7 @@ function PulseShow()
         CurrentShow += 1; 
         if (CurrentShow <NumberOfShows )
         {
-              setTimeout(PulseShow, PulseRate, 0);
+             PulseTimeout =  setTimeout(PulseShow, PulseRate, 0);
        }
     }
    
@@ -251,8 +252,10 @@ function StartAttraction ()
   if (!AttractionRunning)
     {
       AttractionRunning = true;
+      
+      cacheAttractionState (); 
       EmitAttractionState(); 
-      setTimeout(PulseShow, StartPulseRate, 0);
+     PulseTimeout = setTimeout(PulseShow, StartPulseRate, 0);
       
       
     }  
@@ -262,12 +265,16 @@ function StartAttraction ()
 function StopResetAttraction ()
 {
   DebugServerConsole("StopAttraction")
+  
+    if (PulseTimeout ) clearTimeout(PulseTimeout ); 
   AttractionRunning = false;
   CurrentShow = 0; 
+  
+   
    
   mySectionsManager.reset();
   
-  activeShowSessionsRef.forEach(element => {  element["session"].StopClock(); delete element["session"]; }); 
+  activeShowSessionsRef.forEach(element => {  if ( element["session"] ) {element["session"].StopClock(); delete element["session"];} }); 
   activeShowSessions = [];
   
   
@@ -282,7 +289,7 @@ function cacheAttractionState ()
 }
   function EmitAttractionState ()
 { 
-    
+    //DebugServerConsole("EmitAttractionState"); 
       io.in("controllers").emit('cacheAttractionState', CachedAttractionState);
     
      
@@ -334,8 +341,8 @@ io.on('connection', (socket) => {
     //{"ShowID":ShowID,"GroupID":GroupID,"PlayerID":PlayerID}
     DebugServerConsole('join the show'); 
     socket.join("controllers"); 
-});
-  
+}); 
+   
   
   socket.on('join-show', (msg) => 
  {
@@ -420,7 +427,10 @@ io.on('connection', (socket) => {
   
   socket.on('opentap', (msg) => {
     //DebugServerConsole("aopentap")
-    StartAttraction (); 
+    //StartAttraction (); 
+    
+      setTimeout(StartAttraction, 10);
+    
     var number = parseInt(msg, 10);
     io.emit('cube-control', cubedirections[number]);
     
@@ -429,7 +439,9 @@ io.on('connection', (socket) => {
   
    socket.on('closetap', (msg) => {
     //DebugServerConsole("aopentap")
-    StopResetAttraction (); 
+    //StopResetAttraction (); 
+     
+      setTimeout(StopResetAttraction, 10);
    
     
   });
