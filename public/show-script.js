@@ -19,6 +19,29 @@ const dreamsList = document.getElementById("dreams");
 const dreamsForm = document.querySelector("form");
 
 
+/**
+ * Convert (milli)seconds to time string (hh:mm:ss[:mss]).
+ *
+ * @param Boolean isSec
+ *
+ * @return String
+ */
+Number.prototype.toTime = function(isSec) {
+    var ms = isSec ? this * 1e3 : this,
+        lm = ~(4 * !!isSec),  /* limit fraction */
+        fmt = new Date(ms).toISOString().slice(11, lm);
+
+    if (ms >= 8.64e7) {  /* >= 24 hours */
+        var parts = fmt.split(/:(?=\d{2}:)/);
+        parts[0] -= -24 * (ms / 8.64e7 | 0);
+        return parts.join(':');
+    }
+
+    return fmt;
+};
+
+
+
 // a helper function that creates a list item for a given dream
 function appendNewDream(dream) {
   const newListItem = document.createElement("li");
@@ -117,33 +140,83 @@ function appendNewDoor(tap) {
 }
 
 
-fetch("/BarConfiguration")
+
+// a helper function that creates a list item for a given dream
+function appendShowState( strings, DivConfiguration) {
+  
+  var showID = strings.ID; 
+  var time = strings.Time; 
+  var timeRemaining = strings.TimeRemaining; 
+  //var LabelText = strings.initalLabel ; 
+ // if (tap.State == strings.state) LabelText = strings.altLabel ;
+var label = createElement("label",{"class":""}, showID),
+    div = createElement("div",{"class":"", "id":"CurrentState"}),
+    //button = createElement("button",{"type":"submit","id":"button-"+tapID},LabelText),
+    newListItem = createElement("div",{"id":"CurrentStateDiv", "class":""},[label,div]);
+  DivConfiguration.innerHTML = "" ; 
+  DivConfiguration.appendChild(newListItem);
+ /* var taptapName = '#button-'+tapID; 
+     $(taptapName).click(function(){
+       var textContent = $(taptapName).text()  ; 
+      if  (textContent == strings.altLabel)
+        socket.emit(strings.emitAlt, tap.ID); 
+     else  socket.emit(strings.emitBase, tap.ID);
+    });*/
+  
+  }
+
+function GetShowState(ShowID, GroupID, PlayerID){
+fetch("/ShowState"+ShowID)
   .then(response => response.json()) // parse the JSON from the server
   .then(BarConfigurationResponse => {
-    // remove the loading text
-   // BarConfiguration.firstElementChild.remove();
+  appendShowState(BarConfigurationResponse, BarConfiguration);  
+  console.log(BarConfigurationResponse);
+
+  });
+}
+
+
+
+ 
+socket.on('show-state-change', function(msg) {
+   console.log(msg);
+        GetShowState(ShowID, GroupID, PlayerID);
   
-    // iterate through every dream and add it to our page
-    BarConfigurationResponse.forEach(appendNewTap);
-
   });
-fetch("/DoorsConfiguration")
-  .then(response => response.json()) 
-  .then(DoorsConfigurationResponse => {
-   DoorsConfigurationResponse.forEach(appendNewDoor);
-  });
- 
-fetch("/TablesConfiguration")
-  .then(response => response.json()) 
-  .then(ConfigurationResponse => {
-   ConfigurationResponse.forEach(appendNewTable);
-  });
- 
 
 
- 
 
 
+
+var ShowID= ""; 
+var GroupID= ""; 
+var PlayerID = ""; 
+
+
+    // listen for the form to be submitted and add a new dream when it is
+dreamsForm.addEventListener("submit", event => {
+      // stop our form submission from refreshing the page
+      event.preventDefault();
+
+ socket.emit('leave-show', {"ShowID":ShowID,"GroupID":GroupID,"PlayerID":PlayerID}); 
+ ShowID= dreamsForm.elements.dream.value; 
+ GroupID=dreamsForm.elements.group.value; 
+ PlayerID = dreamsForm.elements.player.value; 
+ socket.emit('join-show', {"ShowID":ShowID,"GroupID":GroupID,"PlayerID":PlayerID} ); 
+ GetShowState(ShowID, GroupID, PlayerID);
+/*
+      // get dream value and add it to the list
+      let newDream = dreamsForm.elements.dream.value;
+      dreams.push(newDream);
+      appendNewDream(newDream);
+
+      // reset form
+      dreamsForm.reset();
+      dreamsForm.elements.dream.focus();
+  */
+    });
+
+/*
 
  socket.on('show-control', function(msg) {
         
@@ -176,10 +249,12 @@ fetch("/TablesConfiguration")
     
       });
 
-
+  
+*/
 
    // ${viewingSharedScreen || sharingScreen ? 'Open' : 'Close'
    
 // const cameraSubscriberClass =
   //    `video-container ${!activeCameraSubscribers ? 'hidden' : ''} active-${activeCameraSubscribers} ${viewingSharedScreen || sharingScreen ? 'small' : ''}`;
+  
   
