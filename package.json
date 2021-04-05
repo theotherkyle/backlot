@@ -19,7 +19,8 @@
     "socket.io": "^4.0.1",
     "socket.io-client": "^4.0.1",
     "opentok-accelerator-core": "^2.0.15",
-    "array-flatten": "^3.0.0"
+    "array-flatten": "^3.0.0",
+    "content-disposition": "^0.5.3"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
