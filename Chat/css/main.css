@@ -1,0 +1,222 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: #00a9e7;
+}
+
+.header {
+  background-color: #231f20;
+}
+
+.header .logo {
+  background-color: #cfd0d1;
+  padding: 10px;
+  padding-left: 30px;
+}
+
+.header .x-logo {
+  background-color: #cfd0d1;
+  padding-left: 2px;
+}
+
+.header .x-text {
+  color: #cfd0d1;
+  line-height: 20px;
+  font-size: 10px;
+}
+
+.navbar {
+  line-height: 50px;
+}
+
+#content {
+  margin-top: 10px;
+  overflow: auto;
+}
+
+h2 {
+  color: #00aae7;
+  font: 20px 'Varela Round', Arial, verdana, sans-serif;
+}
+
+#video-chat {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+}
+
+.fixed-height {
+  height: 100%;
+}
+
+footer {
+  width: 100%;
+  height: 90px;
+  background-color: #f5f5f5;
+}
+
+#footer-content {
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+#header-text {
+  padding-left: 15px;
+  font: 14px 'Varela Round', Arial, verdana, sans-serif;
+  color: white;
+  line-height: 44px;
+}
+
+#fullscreen {
+  /* This is for the `a` element that toggles fullscreen mode */
+  position: absolute;
+  display: block;
+  right: 45px;
+  top: 10px;
+  z-index: 9;
+  color: rgba(178, 229, 247, 0.4);
+  border-color: rgba(178, 229, 247, 0.4);
+  background-color: rgba(178, 229, 247, 0.4);
+  padding: 6px;
+  border: 3px solid rgba(178, 229, 247, 0.4);
+  text-align: center;
+  outline: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  opacity: 0;
+  transition:
+    opacity 0.3s linear,
+    color 0.3s ease-in,
+    border-color 0.3s ease-in;
+}
+
+#fullscreen:hover,
+#fullscreen:active {
+  color: #00a9ec;
+  border-color: #00a9ec;
+}
+
+#fullscreen-icon {
+  font-size: 24px;
+}
+
+#video.visible-controls #fullscreen {
+  opacity: 1;
+}
+
+#video.fs-fallback {
+  /*
+        This class provides styles for full screen fallback for browsers that do not support it natively.
+
+        This is not quite working yet because of the header/footer and column layout of the chat page.
+        We have plans to redo that UI getting rid of header/footer and having the video container occupy
+        100% of the page space. This fallback should work at that point (but will need to be tested).
+    */
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+/* Media Queries */
+
+/* Hid footer on screens smaller than 500 px */
+@media only screen and (min-width: 500px) {
+  footer {
+    /* Should match footer height */
+    margin-top: -90px;
+  }
+
+  .well {
+    min-height: 350px;
+    max-height: 350px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  #img-logo {
+    content: url("/images/fm-logo-xs.png");
+  }
+
+  .well {
+    min-height: 200px;
+    max-height: 200px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .row.is-flex {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+
+  .row.is-flex > [class*='col-'] {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+}
+
+/* For 100% Div Height
+@media only screen and (min-width: 768px) {
+    .row.table-row {
+        display: table;
+        width:100%;
+    }
+
+        .row.table-row > [class*="col-"] {
+            float:none;
+            display: table-cell;
+            vertical-align: top;
+        }
+}
+*/
+
+@media only screen and (min-width: 992px) {
+  .header .logo {
+    padding-left: 15px;
+    padding-top: 34px;
+    height: 138px;
+  }
+
+  .header .text {
+    padding-top: 55px;
+    height: 138px;
+  }
+
+  .well {
+    min-height: 350px;
+    max-height: 350px;
+  }
+
+  #header-text {
+    padding-left: 30px;
+
+    /* font: 34px 'Varela Round',Arial,verdana,sans-serif; */
+    font: 400 50px/1.3em 'Varela Round', Arial, verdana, sans-serif;
+    color: white;
+
+    /* line-height: 138px; */
+  }
+}

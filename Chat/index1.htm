@@ -1,0 +1,118 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="">
+<!--<![endif]-->
+<head>
+
+    <!--[if lt IE 11]>
+        <script src="js/vendor/css3-mediaqueries.js"></script>
+    <![endif]-->
+
+    <script language="javascript">
+        /* IE11 Fix for SP2010 */
+        if (typeof (UserAgentInfo) !== 'undefined' && !window.addEventListener) {
+            UserAgentInfo.strBrowser = 1;
+        }
+    </script>
+
+    <link href="css/vendor/varela.css" rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/vendor/font-awesome.min.css">
+    <link rel="stylesheet" href="css/vendor/bootstrap/3.3.7/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/menu.css">
+
+    <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+</head>
+<body>
+    <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+
+    <div id="content" class="container-fluid">
+        <div id="video-chat" style="display:block;">
+            <div id="loading"></div>
+            <div class="row table-row">
+                <div class="col-sm-12 col-md-12 col-lg-8">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <div id="video" class="embed-responsive-item"><a href="#" id="fullscreen"><i id="fullscreen-icon" class="fa fa-expand"></i></a></div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4">
+                    <div class="row"><br /></div>
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="btn-toolbar" role="toolbar">
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-default" id="toggleAudioMute" data-toggle="tooltip" data-container="body" data-placement="bottom" title="Toggle audio mute.">
+                                        <i class="fa fa-lg fa-microphone" aria-hidden="true"></i>
+                                    </button>
+                                    <button class="btn btn-default" id="toggleVideoPreview" data-toggle="tooltip" data-container="body" data-placement="bottom" title="Toggle video preview.">
+                                        <i class="fa fa-lg fa-eye" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-11">
+                            Audio Device:<br />
+                            <select id="audioDeviceList"></select><br />
+                            Video Device:<br />
+                            <select id="videoDeviceList"></select>
+                        </div>
+                    </div>
+                    <div class="row" style="height:75%;">
+                        <div class="col-md-11" style="height:100%">
+                            <div class="well" id="eventLog" style="height:100%;overflow-y:scroll;"></div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:20px;">
+                        <div class="col-md-11">
+                            <div class="input-group">
+                                <input id="sendInput" type="text" class="form-control" placeholder="Message...">
+                                <span class="input-group-btn">
+                                    <button id="sendButton" class="btn btn-default" type="button">Send</button>
+                                    <br />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="log" style="display: none"></div>
+
+    <!-- LiveSwitch 2 libraries -->
+
+    <!--Loading the minified version of javascript by default-->
+    <script>
+        (function () {
+            var debug = false;
+            function isDebugFlagSet(item, index) {
+                if (item.length >= 10 && item.substring(0, 10) == 'debug=true')
+                {
+                    debug = true;
+                }
+            }
+            window.location.href.split('?').forEach(isDebugFlagSet);
+            var src = debug ? "fm.liveswitch.js" : "fm.liveswitch.min.js";
+            document.write('<script type="text/javascript" src="lib/' + src + '"><\/script>');
+        })();
+    </script>
+    <script type="text/javascript" src="js/config.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/liveswitch-app.js"></script>
+    <script type="text/javascript" src="js/Menu.js"></script>
+    <script type="text/javascript" src="js/ContextMenu.js"></script>
+    <script type="text/javascript" src="js/MenuItem.js"></script>
+
+    <script src="js/vendor/jquery-1.11.2.min.js"></script>
+</body>
+</html>
