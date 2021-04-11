@@ -256,7 +256,7 @@ fetch("/ShowState"+ShowID)
 
 
   socket.emit('join-controllers', {"ControllerID":"12"}); 
-
+var currentShow = -1; 
 
 const DreamsConfiguration = document.getElementById("DreamConfiguration");
 
@@ -270,6 +270,11 @@ const DreamsConfiguration = document.getElementById("DreamConfiguration");
     var values = msg["SectionsManager"][Stagestrings_a[0]]["CurrentShows"]; 
    // console.log(values);//]
     var Message = "Currently With Show : " + values; 
+    if (currentShow != values[0])
+      {
+        currentShow = values[0]; 
+        window.StartUp(currentShow.toString());
+      }
     var label = createElement("label",{"class":""}, Message),
     div = createElement("div",{"class":"", "id":"CurrentState"}),
     //button = createElement("button",{"type":"submit","id":"button-"+tapID},LabelText),
