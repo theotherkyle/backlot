@@ -1,0 +1,90 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A cool thing made with Glitch">
+
+    <title>Welcome to Glitch!</title>
+
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="/player-style.css">
+
+    <!-- import the webpage's client-side javascript file -->
+    
+    
+  <script src="../js/components/socket.io.js"></script>
+    <script src="../js/helper-modules.js"></script>
+    <script src="../performer-script.js" defer></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script> 
+
+    
+     <script>
+  
+   var socket = io();
+       
+  $(document).ready(function() {   });
+  
+    </script> 
+    
+    
+  </head>
+  <body>
+    <header>
+      <h1>Performer Simulation Viewer</h1>
+    </header>
+
+    <main>
+      
+      
+      
+      <form>
+      
+        <label>
+          Stage Name
+          <!--input name="group" type="text" maxlength="100" required placeholder="Stage Name" -->
+          
+          <select id="group"  onchange="doSomething();" onfocus="this.selectedIndex = -1;">
+        </select>
+          
+        </label>
+        <label>
+          Performer ID
+          
+          <select id="player">
+              <option value="1">Angular</option>
+              <option value="2">React</option>
+              <option value="3">Vue.js</option>
+              <option value="4">Ember.js</option>
+        </select>
+          
+          
+          <!--input name="player" type="text" maxlength="100" required placeholder="Performer ID" -->
+        </label>
+        <button type="submit" id="submit-dream">Enter Show</button>
+      </form>
+      
+      <form>
+      
+        <div id="BarConfiguration"></div>
+        
+      </form>
+
+      
+        <div id="DreamConfiguration"></div>
+      <section class="dreams">
+        <ul id="dreams">
+          <em>loading dreams&hellip;</em>
+        </ul>
+      </section>
+    </main>
+
+    <footer></footer>
+
+  </body>
+</html>
