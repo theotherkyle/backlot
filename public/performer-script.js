@@ -41,46 +41,140 @@ Number.prototype.toTime = function(isSec) {
 };
 
 
+  var group_selectedIndex =  ""; // dreamsForm.elements.group.selectedIndex ; 
+  
+  var player_selectedIndex =  ""; //dreamsForm.elements.player.selectedIndex ; 
+  
+   var group_selectedName =  ""; // dreamsForm.elements.group[group_selectedIndex].text; // "AssistanceFacilitatorStage"; 
+  var player_selectedID =  ""; // dreamsForm.elements.player[player_selectedIndex].text;// "1"
+  
 
-// a helper function that creates a list item for a given dream
-function appendNewDream(dream) {
-  const newListItem = document.createElement("li");
-  newListItem.innerText = dream;
-  dreamsList.appendChild(newListItem);
+function JoinSession(group_selectedIndex_l, group_selectedName_l, player_selectedIndex_l, player_selectedID_l)
+{
+  
+  socket.emit('performer-leave-show', {"StageName":group_selectedName,"PerformerID":player_selectedID}); 
+  group_selectedIndex = group_selectedIndex_l; 
+  player_selectedIndex = player_selectedIndex_l;
+  group_selectedName = group_selectedName_l; 
+  player_selectedID = player_selectedID_l; 
+  
+  socket.emit('performer-join-show', {"StageName":group_selectedName,"PerformerID":player_selectedID} ); 
+ //GetShowState(ShowID, GroupID, PlayerID);
+ 
+  
+}
+ var Stagestrings_a = [];
+function EnterRoom()
+{
+  
+  JoinSession(dreamsForm.elements.group.selectedIndex,
+              dreamsForm.elements.group[dreamsForm.elements.group.selectedIndex].text, 
+             dreamsForm.elements.player.selectedIndex , 
+              dreamsForm.elements.player[dreamsForm.elements.player.selectedIndex].text);// "1"
+  
+  
+ fetch ("../Stages/"+group_selectedName+player_selectedID)
+   .then(response => response.json()) // parse the JSON from the server
+  .then(dreams => 
+  {
+   console.log(dreams);
+   
+   //{"Stage-Name":"AssistanceFacilitatorStage","Troupe":"0","Troupe-Sections":["0 - Arrivals"],"Stage-Sections":["0 - Arrivals"]}
+   
+   /*
+   
+  var showID = strings.ID; 
+  var time = strings.Time; 
+  var timeRemaining = strings.TimeRemaining; 
+  
+   */ 
+   
+   
+   
+  BarConfiguration.innerHTML = "" ; 
+   
+  var label = createElement("label",{"class":""}, dreams["Stage-Name"] + " : " + player_selectedID),
+    div = createElement("div",{"class":"", "id":"CurrentState"}),
+    newListItem = createElement("div",{"id":"CurrentStateDiv", "class":"sectionclass"},[label,div]);
+   
+  BarConfiguration.appendChild(newListItem);
+   
+   var Troupestrings = [];
+     dreams["Troupe-Sections"].forEach(element => {
+         Troupestrings.push(createElement("label",{"class":""}, element)); 
+     });
+   label = createElement("label",{"class":""}, "Troupe-Sections"),
+    div = createElement("div",{"class":"listclass", "id":"TroupeState"},Troupestrings),
+     
+  newListItem = createElement("div",{"id":"TroupeDiv", "class":"sectionclass"},[label,div]);
+    
+  BarConfiguration.appendChild(newListItem);
+   
+   Stagestrings_a = []; 
+   var  Stagestrings = [];
+     dreams["Stage-Sections"].forEach(element => {
+         Stagestrings.push(createElement("label",{"class":""}, element)); 
+         Stagestrings_a.push(element); 
+     });
+   label = createElement("label",{"class":""}, "Stage-Sections"),
+    div = createElement("div",{"class":"listclass", "id":"StageState"}, Stagestrings), 
+  newListItem = createElement("div",{"id":"StagesDiv", "class":"sectionclass"},[label,div]);
+   
+  BarConfiguration.appendChild(newListItem);
+ }); 
+  
+  
 }
 
+
+
+
+
+function doSomething () 
+{
+  var selectedIndex = dreamsForm.elements.group.selectedIndex ; 
+ var mySelect = dreamsForm.elements.player; 
+  for (var val in mySelect.options) { mySelect.options.remove(0); }
+
+  var scale = StagesResponse[selectedIndex].scale; 
+    for(var i=1; i<=scale; i++)
+      {
+        var option = document.createElement("option");
+        option.text = i; 
+        mySelect.add(option);
+      }; 
+  
+}
+var StagesResponse = {}; 
+
 // fetch the initial list of dreams
-fetch("/dreams")
+fetch("/Stages")
   .then(response => response.json()) // parse the JSON from the server
-  .then(dreams => {
-    // remove the loading text
-    dreamsList.firstElementChild.remove();
+  .then(stagesresponse => {
   
-    // iterate through every dream and add it to our page
+  StagesResponse = stagesresponse; 
   
- // dreams.forEach(appendNewDream);
+ var mySelect = dreamsForm.elements.group;
+
   
-    // listen for the form to be submitted and add a new dream when it is
-    dreamsForm.addEventListener("submit", event => {
-      // stop our form submission from refreshing the page
-      event.preventDefault();
-/*
-      // get dream value and add it to the list
-      let newDream = dreamsForm.elements.dream.value;
-      dreams.push(newDream);
-      appendNewDream(newDream);
-*/
-      // reset form
-      dreamsForm.reset();
-      //dreamsForm.elements.dream.focus();
-    });
+  stagesresponse.forEach( element => { 
+  
+      var option = document.createElement("option");
+      option.text = element["Name"];
+    option.value = element["id"]; 
+        mySelect.add(option);
+}); 
+   //stagesresponse.forEach 
+   
+  
+  //  });
    
   });
 
 
-const BarConfiguration = document.getElementById("BarConfiguration");
 
-const StateConfiguration =  document.getElementById("StateConfiguration");
+
+const BarConfiguration = document.getElementById("BarConfiguration");
 const DoorsConfiguration = document.getElementById("DoorsConfiguration");
 const TablesConfiguration = document.getElementById("TablesConfiguration");
 
@@ -119,26 +213,8 @@ function appendNewTable(tap) {
 function appendNewTap(tap) {
   appendNewElement(tap, tapstrings, BarConfiguration);
   }
-
-  // a helper function that creates a list item for a given dream
 function appendNewDoor(tap) {
-  
   appendNewElement(tap, doorstrings, DoorsConfiguration);
-  
-  
-  
-      
-   
- // var newListItem = createElement("div",{"id":"name"},tap.Name);
-  
-  
-  /*
-    <div class="tap" id="tap-000">
-           <label>Good Beer</label>
-          <div class="status"> </div>
-          <button type="submit" id="open-tap-000">Open Tap</button>
-        </div>
-        */
 }
 
 
@@ -171,12 +247,45 @@ function GetShowState(ShowID, GroupID, PlayerID){
 fetch("/ShowState"+ShowID)
   .then(response => response.json()) // parse the JSON from the server
   .then(BarConfigurationResponse => {
-  appendShowState(BarConfigurationResponse, BarConfiguration);  
+ // appendShowState(BarConfigurationResponse, BarConfiguration);  
   console.log(BarConfigurationResponse);
 
   });
 }
 
+
+
+  socket.emit('join-controllers', {"ControllerID":"12"}); 
+
+
+const DreamsConfiguration = document.getElementById("DreamConfiguration");
+
+  socket.on('cacheAttractionState', function(msg) {
+    
+   // Rebuild(msg); 
+    
+    
+    //console.log(msg);
+    //console.log();
+    var values = msg["SectionsManager"][Stagestrings_a[0]]["CurrentShows"]; 
+   // console.log(values);//]
+    var Message = "Currently With Show : " + values; 
+    var label = createElement("label",{"class":""}, Message),
+    div = createElement("div",{"class":"", "id":"CurrentState"}),
+    //button = createElement("button",{"type":"submit","id":"button-"+tapID},LabelText),
+    newListItem = createElement("div",{"id":"CurrentStateDiv", "class":""},[label,div]);
+    DreamsConfiguration.innerHTML = "" ; 
+    DreamsConfiguration.appendChild(newListItem);
+    
+  
+   });
+
+ 
+socket.on('channel-change', function(msg) {
+   console.log(msg);
+     //   GetShowState(ShowID, GroupID, PlayerID);
+  
+  });
 
 
  
@@ -186,61 +295,6 @@ socket.on('show-state-change', function(msg) {
   
   });
 
-
-var StagesResponse = {}; 
-
-// fetch the initial list of dreams
-fetch("/Stages")
-  .then(response => response.json()) // parse the JSON from the server
-  .then(stagesresponse => {
-  
-  StagesResponse = stagesresponse; 
-  
- var mySelect = dreamsForm.elements.show;
-
-  for (var i=0; i<50; i++)
-    {
-      
-      var option = document.createElement("option");
-      option.text = i;
-      option.value = i; 
-        mySelect.add(option);
-    }
-  
-  
-   var mySelect = dreamsForm.elements.group;
-
-  for (var i=0; i<10; i++)
-    {
-      
-      var option = document.createElement("option");
-      option.text = i+1;
-      option.value = i+1; 
-        mySelect.add(option);
-    }
-  
-  
-   var mySelect = dreamsForm.elements.player;
-
-  for (var i=0; i<6; i++)
-    {
-      
-      var option = document.createElement("option");
-      option.text = i+1;
-      option.value = i+1; 
-        mySelect.add(option);
-    }
-  
-  
-  
- // stagesresponse.forEach( element => { 
-  
-}); 
-   //stagesresponse.forEach 
-   
-  
-  //  });
-   
 
 
 
@@ -254,37 +308,14 @@ var PlayerID = "";
 dreamsForm.addEventListener("submit", event => {
       // stop our form submission from refreshing the page
       event.preventDefault();
-
- socket.emit('leave-show', {"ShowID":ShowID,"GroupID":GroupID,"PlayerID":PlayerID}); 
   
+      EnterRoom(); 
   
- ShowID= dreamsForm.elements.show[dreamsForm.elements.show.selectedIndex].value; 
- GroupID=dreamsForm.elements.group[dreamsForm.elements.group.selectedIndex].value; 
- PlayerID = dreamsForm.elements.player[dreamsForm.elements.player.selectedIndex].value; 
- socket.emit('join-show', {"ShowID":ShowID,"GroupID":GroupID,"PlayerID":PlayerID} ); 
- GetShowState(ShowID, GroupID, PlayerID);
-  
-  
-  StateConfiguration.innerHTML = "" ; 
-  
-  var LabelText = "Show ID: " + ShowID + " | Group #" + GroupID + " | Player #" + PlayerID ; 
-var label = createElement("label",{"class":""}, LabelText ),
-    div = createElement("div",{"class":""}),
-    //button = createElement("button",{"type":"submit","id":"button-"+tapID},LabelText),
-    newListItem = createElement("div",{"class":""},[label,div]);
-  StateConfiguration.appendChild(newListItem);
-  
-/*
-      // get dream value and add it to the list
-      let newDream = dreamsForm.elements.dream.value;
-      dreams.push(newDream);
-      appendNewDream(newDream);
-
-      // reset form
-      dreamsForm.reset();
-      dreamsForm.elements.dream.focus();
-  */
     });
+
+
+
+
 
 /*
 

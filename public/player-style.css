@@ -64,9 +64,17 @@ footer {
   vertical-align:middle;
 }
 
+.listclass {
+  display:grid;
+}
+.sectionclass {
+    margin-bottom:10px; 
+}
+
+
 #BarConfiguration > * {
   
-  display:inline-block;
+  display:block;
   vertical-align:middle;
 }
 .tap 

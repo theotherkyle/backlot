@@ -179,11 +179,15 @@ app.get('/', (req, res) => {
 
 const ShowSessionClass = require('./src/services/showsession.js');
 const GroupsClass = require('./src/services/groups.js');
+const PerformerGroupsClass = require('./src/services/performergroups.js');
 const SectionsManagerClass = require('./src/services/sectionsmanager.js');
+const StagesManagerClass = require('./src/services/stagesmanager.js');
 
 //mySectionsManager.join(arg); 
 const myGroups = new GroupsClass(0);
+const myStagePerformersGroups = new PerformerGroupsClass(0);
 const mySectionsManager = new SectionsManagerClass(0);
+const myStagesManager = new StagesManagerClass(0); 
 var activeShowSessions = [];
 var activeShowSessionsRef = []; 
 
@@ -197,7 +201,7 @@ function CreateNewShowSession (ID)
   
   myShowSession.on( 'ShowStateChange', (arg) => {
     
-     //DebugServerConsole(JSON.stringify(arg)); 
+      DebugServerConsole(JSON.stringify(arg)); 
       mySectionsManager.join(arg); 
   
      // console.log('myShowSession -- ShowStateChange');
@@ -207,22 +211,84 @@ function CreateNewShowSession (ID)
 
 });  
   
-var ShowStateRequests = [
- {value:"/ShowState"+ID, content:myShowSession}, 
-  
-]; 
-ShowStateRequests.forEach(element => {
-  //console.log(element);
-  app.get(element.value, (request, response) => {
-      // express helps us take JS objects and send them as JSON
-      response.json(element.content.getState());
-    });
-});
   myShowSession.Go();
 
-
-
 }
+
+myStagesManager.getState().forEach(element => {
+  
+ 
+  for (var i=1; i<=element.scale; i++)
+  {
+    
+   var  url = "/Stages/"+element.Name+i; 
+    //element.SectionTroupe
+   var Scenes = mySectionsManager.troupeScene[element.SectionTroupe]; 
+   var StageScenes = mySectionsManager.Stages[element.id]; 
+    
+    var StageSceneNames = [];
+    
+     StageScenes.forEach(element => {
+         StageSceneNames.push(mySectionsManager.ShowStructure[element]["ID"]); 
+     });
+    
+    var SceneNames =  [];
+     Scenes.forEach(element => {
+         SceneNames.push(mySectionsManager.ShowStructure[element]["ID"]); 
+     });
+    //console.log(url);
+    var responses =  {"Stage-Name" :element.Name, "Troupe":element.SectionTroupe, "Troupe-Sections":SceneNames,  "Stage-Sections":StageSceneNames};   
+  app.get(url, (request, response) => {
+     // console.log(activeShowSessionsRef);
+      // express helps us take JS objects and send them as JSON
+    
+      response.json( responses );// activeShowSessionsRef [element.content].session.getState()); // element.content.getState());
+    });
+  }
+});
+
+app.get('/ActiveStages' , (req, res) => {
+  
+  
+   res.json(myStagePerformersGroups.getGroups()); 
+  
+
+});
+
+app.get('/Stages', (req, res) => {
+   res.json(myStagesManager.getState()); 
+});
+
+var ID = 0; 
+var ShowStateRequests = [];
+for (ID=0; ID<50; ID++)
+  {
+ 
+    ShowStateRequests.push({value:"/ShowState"+ID, content:ID}); 
+  }
+ 
+ShowStateRequests.forEach(element => {
+ // console.log(element);
+  app.get(element.value, (request, response) => {
+      //console.log(activeShowSessionsRef);
+      // express helps us take JS objects and send them as JSON
+   var  responseVals = activeShowSessionsRef [element.content].session.getState(); 
+    var withStageID = 
+        mySectionsManager.ShowStructure[
+        mySectionsManager.Structure[responseVals.ID]["id"] ].stages; 
+     // console.log(withStageID[0]); 
+       var  currentStage = myStagesManager.getState()[withStageID[0]]; 
+      if (currentStage){ 
+       var withStage =  {"Name":currentStage.Name, "ID":withStageID[0]};
+  
+        responseVals["WithStage"] = withStage; 
+      }
+    else responseVals["WithStage"] = {};
+    
+      response.json( responseVals); // element.content.getState());
+    });
+});
+
 
 var PulseTimeout = null; 
 var AttractionRunning = false; 
@@ -269,13 +335,16 @@ function StopResetAttraction ()
     if (PulseTimeout ) clearTimeout(PulseTimeout ); 
   AttractionRunning = false;
   CurrentShow = 0; 
-  
    
+   
+      console.log(activeShowSessionsRef);
    
   mySectionsManager.reset();
   
   activeShowSessionsRef.forEach(element => {  if ( element["session"] ) {element["session"].StopClock(); delete element["session"];} }); 
   activeShowSessions = [];
+  activeShowSessionsRef = [];
+  
   
   
 }
@@ -309,10 +378,11 @@ function getFullAttractionState ()
          'ShowStructure': mySectionsManager.getShowStructure(), 
           'ShowsProgress': activeShowSessions, 
           'Groups': myGroups.getGroups(), 
-          'SectionsManager':mySectionsManager.getSections()
+          'SectionsManager':mySectionsManager.getSections(), 
+           'PerformersManager':myStagePerformersGroups.getGroups(), 
          }
 }
-
+ 
   
 var AttractionStateRequests = [
  {value:"/FullAttractionState"}, 
@@ -327,11 +397,20 @@ AttractionStateRequests.forEach(element => {
     });
 });
 
+var marker = 0; 
 
-
-
-
- 
+function EmitPhrasePulse()
+{
+  
+  io.emit("phrasePulse", {"marker":marker}); 
+  marker = marker+=1; 
+ if (marker > 5) marker = 0;
+  setTimeout(EmitPhrasePulse, 500);
+};
+  setTimeout(EmitPhrasePulse, 500);
+  
+  
+ var tryPhrase = 0;
 
 io.on('connection', (socket) => {
   DebugServerConsole('a user connected');
@@ -342,7 +421,39 @@ io.on('connection', (socket) => {
     DebugServerConsole('join the show'); 
     socket.join("controllers"); 
 }); 
-   
+  
+    socket.on('joinsillygame', (msg) => 
+ {
+  
+    socket.emit('setPhrase',{"tryPhrase":tryPhrase, "marker":marker}); 
+      tryPhrase += 1; 
+     if (tryPhrase > 5) tryPhrase = 0;
+  }); 
+  
+  
+  socket.on('performer-join-show', (msg) => 
+ {
+    //{"ShowID":ShowID,"GroupID":GroupID,"PlayerID":PlayerID}
+  //  {"StageName":"AssistanceFacilitatorStage","PerformerID":"2"}
+    myStagePerformersGroups.join( msg); 
+    var joinChannel = "PerformerStage-"+msg["StageName"]+msg["PerformerID"]; 
+     socket.join(joinChannel); 
+   // socket.join("show"+msg["ShowID"]+"_group"+msg["GroupID"]); 
+    DebugServerConsole(`Stage Performer Joined Show : ${JSON.stringify(msg)} : ${joinChannel}`); 
+    
+    
+      io.in(joinChannel).emit('channel-change', joinChannel);
+    
+    
+    // check if your room isn't undefined.
+//if (io.sockets.adapter.rooms["show"+msg["ShowID"]]) 
+{
+   // result
+}
+    
+    //https://socket.io/docs/v3/rooms/
+    
+  });
   
   socket.on('join-show', (msg) => 
  {
@@ -368,7 +479,7 @@ io.on('connection', (socket) => {
     
     myGroups.leave( msg); 
     socket.leave("show"+msg["ShowID"]); 
-    leaving = "show"+msg["ShowID"]+"_group"+msg["GroupID"]; 
+    var leaving = "show"+msg["ShowID"]+"_group"+msg["GroupID"]; 
     socket.leave(leaving); 
     DebugServerConsole(`Player Left Show : ${JSON.stringify(msg)}`); 
     

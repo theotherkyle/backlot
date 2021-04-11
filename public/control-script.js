@@ -88,7 +88,7 @@ const TablesConfiguration = document.getElementById("TablesConfiguration");
 const tapstrings = { id:"tap-", initalLabel:"Open Tap", state:"Open", altLabel:"Close Tap", class:"tapLabel", div_class:"tap" ,  emitAlt:"closetap", emitBase:"opentap"}
 
 const doorstrings = { id:"door-", initalLabel:"Open Door", state:"Open", altLabel:"Close Door", class:"tapLabel", div_class:"tap" ,  emitAlt:"closedoor", emitBase:"opendoor"}
-const tablestrings = { id:"table-", initalLabel:"Enter Table", state:"Open", altLabel:"Close Table", class:"tapLabel", div_class:"tap" ,  emitAlt:"disabletable", emitBase:"enabletable"}
+const tablestrings = { id:"table-", initalLabel:"Enter Table", state:"Open", altLabel:"Close Table", class:"tapLabel", div_class:"tap-table" ,  emitAlt:"disabletable", emitBase:"enabletable"}
 
 // a helper function that creates a list item for a given dream
 function appendNewElement(tap, strings, DivConfiguration) {
@@ -210,14 +210,56 @@ function adjustStructureElement(tap, strings, DivConfiguration) {
   
   var tapID = strings.id + tap.ID;
   var tapIDStatus = tapID + "Status"
-  grps = SectionStatus[tap.ID]["CurrentShows"];
+  var grps = SectionStatus[tap.ID]["CurrentShows"];
   
- labeleapsedtime= document.getElementById( "groupsLabel"+tapIDStatus ); 
+ var labeleapsedtime= document.getElementById( "groupsLabel"+tapIDStatus ); 
   labeleapsedtime.innerHTML = grps; 
+  
+  
+  var sectionPerformerStages = document.getElementById( "frame_stages_status"+tapID ); 
+  sectionPerformerStages.innerHTML = ""; 
+  sectionPerformerStages.appendChild (adjustPerformerStages(tap, tapIDStatus, tapID)); 
+  
+  //.(newListItem);  
   
   
 }
 
+
+function adjustPerformerStages(tap, tapIDStatus, tapID)
+{
+  
+  var div_stages = []; 
+  var div_stage = []; 
+    if(tap.stages.length > 0)
+  {
+    var str = StagesStructure[tap.stages[0]]; 
+ 
+  var Val = str.Name ;//
+ var  ActivePerformersInStage =0; 
+    if(PerformersManager)if(PerformersManager[Val]){
+     //console.log( ); 
+     var  ActivePerformersInStage = Object.keys(PerformersManager[Val]).length; 
+    }
+    
+    for (var i=0; i<str.scale; i++)
+      {
+        if( i < ActivePerformersInStage)
+         div_stage[i] = createElement("div",{"class":"stage_status_active", "id":  "stagestatus"+tapIDStatus }, str.NumberOfActors);
+        else
+        div_stage[i] = createElement("div",{"class":"stage_status", "id":  "stagestatus"+tapIDStatus }, str.NumberOfActors);
+        
+        
+      };
+  div_stages  = createElement("div",{"id":"stages_status"+tapID, "class":"stages_status"},div_stage);
+  
+    
+    //+ " " + str.scale + " - " + str.NumberOfActors * str.scale  ; 
+  
+  }
+  else  div_stages  = createElement("div",{"id":"stages_status"+tapID, "class":"stages_status"},"");
+  return div_stages; 
+}
 
 function appendNewStructureElement(tap, strings, DivConfiguration) {
 
@@ -243,6 +285,13 @@ function appendNewStructureElement(tap, strings, DivConfiguration) {
     
   grps = SectionStatus[tap.ID]["CurrentShows"];
   
+     var Val = "" ;  
+  grps = SectionStatus[tap.ID]["CurrentShows"];
+
+  var div_stages =  adjustPerformerStages(tap, tapIDStatus, tapID); 
+  var frame_stages_status = createElement("div",{"class":"", "id":"frame_stages_status"+tapID}, div_stages);
+  
+  
 var label = createElement("label",{"class":strings.class}, tap.ID),
     label_grps = createElement("label",{"class":strings.class, "id":  "groupsLabel"+tapIDStatus }, "Shows: "+ grps),
     label_aud = createElement("label",{"class":strings.class, "id":  "audLabel"+tapIDStatus }, "  "),
@@ -251,9 +300,13 @@ var label = createElement("label",{"class":strings.class}, tap.ID),
     labeltimelabel = createElement("label",{"class":strings.class, "id":  "timeTotal"+tapIDStatus }, "Total Time:" ),
     labeltime = createElement("label",{"class":strings.class, "id":  "timeTotal"+tapIDStatus }, totalTime),
     div = createElement("div",{"class":"Attrstatus_"+tap.State, "id":tapIDStatus}),
-    labeltimeremaining = createElement("label",{"class":strings.class, "id":  "timeR"+tapIDStatus }, "00:00:00"),
+    labelstages = createElement("label",{"class":strings.class, "id":  "timeR"+tapIDStatus }, Val),
+    
+    
+    
+    
     //button = createElement("button",{"type":"submit","id":"button-"+tapID},LabelText),
-    newListItem = createElement("div",{"id":tapID, "class":strings.div_class},[label,label_grps, label_aud, labeltimelabel, labeltime, div, labeltimeremaining]);
+    newListItem = createElement("div",{"id":tapID, "class":strings.div_class},[label,label_grps, label_aud, labeltimelabel, labeltime, div, labelstages,frame_stages_status]);
   
   DivConfiguration.appendChild(newListItem);  
   
@@ -371,11 +424,11 @@ var label = createElement("label",{"class":strings.class}, tap.ID),
   }
 
 function AdjustAttractionState(tap) {
-  AdjustAttrElement(tap, tablestrings, DoorsConfiguration);
+  AdjustAttrElement(tap, doorstrings, DoorsConfiguration);
   }
 
 function buildAttractionState(tap) {
-  appendNewAttrElement(tap, tablestrings, DoorsConfiguration);
+  appendNewAttrElement(tap, doorstrings, DoorsConfiguration);
   }
 function appendNewTable(tap) {
   appendNewElement(tap, tablestrings, TablesConfiguration);
@@ -417,12 +470,13 @@ fetch("/BarConfiguration")
     BarConfigurationResponse.forEach(appendNewTap);
 
   });
-
+var NumberOfShows = {}; 
 var ShowStructure = {};
 var ShowsProgress = {};
 var ShowsGroups = {};
 var SectionStatus = {}; 
-
+var StagesStructure = {}; 
+var   PerformersManager ={};
 function Rebuild(FullAttractionStateResponse)
 {
   
@@ -437,11 +491,12 @@ function Rebuild(FullAttractionStateResponse)
   ShowsProgress = FullAttractionStateResponse["ShowsProgress"]; 
   ShowsGroups = FullAttractionStateResponse["Groups"]; 
   SectionStatus = FullAttractionStateResponse["SectionsManager"]; 
+  PerformersManager = FullAttractionStateResponse["PerformersManager"]; 
   
   //console.log(ShowStructure); 
   //console.log(ShowsProgress[0]['State'['ID']])
   
-  for (i=0; i<NumberOfShows; i++)
+  for (var i=0; i<NumberOfShows; i++)
     {
       AdjustAttractionState({'ID':i, 'State':'Closed', }); 
     }
@@ -471,9 +526,21 @@ fetch("/FullAttractionState")
   ShowsGroups = FullAttractionStateResponse["Groups"]; 
   
   SectionStatus = FullAttractionStateResponse["SectionsManager"]; 
+  PerformersManager = FullAttractionStateResponse["PerformersManager"]; 
+  
+  
+  
+  
+  fetch("/Stages")
+  .then(response => response.json()) 
+   .then(StagesResponse => {
+    StagesStructure = StagesResponse ; 
+    
+
+  
   //console.log(ShowStructure); 
   //console.log(ShowsProgress[0]['State'['ID']])
-  for (i=0; i<NumberOfShows; i++)
+  for (var i=0; i<NumberOfShows; i++)
     {
       buildAttractionState({'ID':i, 'State':'Closed', }); 
     }
@@ -484,7 +551,8 @@ fetch("/FullAttractionState")
 /*
   .then(ConfigurationResponse => {
    ConfigurationResponse.forEach(appendNewTable);*/
-  });
+   });
+ });
   // setTimeout(Rebuild, 0);
 }
 

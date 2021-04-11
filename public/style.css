@@ -77,6 +77,18 @@ footer {
   vertical-align:middle;
 }
 
+
+.tap-table
+{
+  text-align :center; 
+  border: 2px solid silver;
+  
+  margin-right: 0.25em;
+  margin-bottom: 0.25em;
+  align :center; 
+  width:175px;
+}
+
 .tap 
 {
   text-align :center; 
@@ -115,8 +127,51 @@ footer {
   height: 9px;
 }
 
+.stages_status
+{
+   // background-color: blue;;
+  border: 2px solid silver;
+  
+  display: block;
+  /*grid-gap: 1em;*/
+  padding: 5px;
+  height:70px; 
+}
 
 
+.stages_status > * {
+  
+  display:inline-block;
+  vertical-align:middle;
+ 
+}
+
+
+.stage_status_active
+{
+    background-color: green;;
+  border: 3px solid silver;
+  margin:1px; 
+  width:25px;
+  height:25px;
+  
+  align:center;
+  display: inline-grid;
+}
+
+.stage_status 
+{
+    background-color: #aaaaaa;;
+  border: 3px solid silver;
+  margin:1px; 
+  width:25px;
+  height:25px;
+  
+  align:center;
+  display: inline-grid;
+ /* grid-gap: 1em;
+  padding: 1em;*/
+}
 
 .status {
    background-color: #aaaaaa;;

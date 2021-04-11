@@ -10,10 +10,26 @@ module.exports = class ShowSession extends EventEmitter {
     this.width = width;
     this.active = true; 
    // this.eventHandler = eh; 
-    this.tick = 1000; 
+    this.tick = 1000;  
   this.CurrentPosition = -1;
 //    this.NextTimeOut = null; 
-  this.Structure = [{"ID":"Preshow", Time:15000, TimeC:"00:15:00"},
+    
+  this.Structure = [{"ID":"0 - Arrivals", Time:15000, TimeC:"00:15:00"},
+                   {"ID":"1 - Welcome", Time:4000, TimeC:"00:03:00"}, 
+                   {"ID":"1 - Workshop", Time:15000, TimeC:"00:06:00"}, 
+                   //{"ID":"1 - Common", Time:2000, TimeC:"00:01:00"}, 
+                   {"ID":"2 - Keynote", Time:3000, TimeC:"00:02:00"}, 
+                   {"ID":"2- Orientation", Time:2000, TimeC:"00:03:00"}, 
+                   {"ID":"3 - Missions",Time:18000,  TimeC:"00:30:00"}, 
+                   {"ID":"4 - Ivor", Time:5000, TimeC:"00:03:00"},
+                   {"ID":"4 - Apt", Time:10000, TimeC:"00:12:00"},
+                   {"ID":"5 - Janine", Time:2000, TimeC:"00:02:00"},
+                   {"ID":"6 - Action", Time:4000, TimeC:"00:04:00"}, 
+                   {"ID":"6 - Basement", Time:3000, TimeC:"00:04:00"}, 
+                   {"ID":"Postshow", Time:15000, TimeC:"00:15:00"}, ]; 
+    
+    
+  this.OldStructure = [{"ID":"Preshow", Time:15000, TimeC:"00:15:00"},
                    {"ID":"Welcome", Time:3000, TimeC:"00:03:00"}, 
                    {"ID":"Workshops", Time:6000, TimeC:"00:06:00"}, 
                    {"ID":"Recap", Time:1000, TimeC:"00:01:00"}, 
@@ -26,6 +42,8 @@ module.exports = class ShowSession extends EventEmitter {
                    {"ID":"Basement", Time:4000, TimeC:"00:04:00"}, 
                    {"ID":"Hero", Time:4000, TimeC:"00:04:00"}, 
                    {"ID":"Postshow", Time:15000, TimeC:"00:15:00"}, ]; 
+    
+    // 10+20+5+18+15+2+10
     
     this.CurrentPositionData = {"TimeRemaining":0,  "ElapsedTime":0, "Time":0, "ID":"0"}; 
     
