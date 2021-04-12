@@ -62,7 +62,7 @@ fm.liveswitch.Util.addOnLoad(function () {
     
         fm.liveswitch.Log.info('Unregistering...');
         app.leaveAsync(clientUnregistered).then(function (o) {
-            fm.liveswitch.Log.info('Unregistered.');
+            fm.liveswitch.Log.info('Unregistered.'); 
     
         app.channelId = channelId;
         app.mode =  2; // MCU  // joinType.selectedIndex + 1
