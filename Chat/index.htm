@@ -1,0 +1,246 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <title>LiveSwitch Video Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Frozen Mountain Software is the industry leader in creating powerful commercial software libraries for internet based real-time communications applications.">
+    <meta name="keywords" content="liveswitch, webrtc, sfu, mcu, p2p, real-time communications">
+    <link rel="shortcut icon" type="image/png" href="favicon.ico">
+
+    <!--[if lt IE 11]>
+        <script src="js/vendor/css3-mediaqueries.js"></script>
+    <![endif]-->
+
+    <script language="javascript">
+        /* IE11 Fix for SP2010 */
+        if (typeof (UserAgentInfo) !== 'undefined' && !window.addEventListener) {
+            UserAgentInfo.strBrowser = 1;
+        }
+    </script>
+
+    <link href="css/vendor/varela.css" rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/vendor/font-awesome.min.css">
+    <link rel="stylesheet" href="css/vendor/bootstrap/3.3.7/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/menu.css">
+
+    <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+</head>
+<body>
+    <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <header class="header container-fluid">
+        <div class="col-md-x col-lg-x">
+            <div class="row">
+                <div class="logo col-xs-4 col-md-3 col-lg-3">
+                    <div class="col-xs-12 hidden-sm hidden-md hidden-lg">
+                        <img class="img-responsive" src="images/fm-logo-xs.png" /><!--Mobile-->
+                    </div>
+                    <div class="hidden-xs col-sm-12 hidden-md hidden-lg">
+                        <img class="img-responsive" width="100" src="images/fm-logo.png" /><!--Tab-->
+                    </div>
+                    <div class="hidden-xs hidden-sm col-md-12 hidden-lg">
+                        <img class="img-responsive" src="images/fm-logo.png" /><!--Desktop-->
+                    </div>
+                    <div class="hidden-xs hidden-sm hidden-md col-lg-12">
+                        <img class="img-responsive" src="images/fm-logo.png" /><!--Large-->
+                    </div>
+                </div>
+                <div class="text col-xs-8 col-md-9 col-lg-9">
+                    <div class="navbar-left">
+                        <span id="header-text">LiveSwitch Video Chat</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="content" class="container-fluid">
+
+        <div id="channelSelector">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Welcome!</h2>
+                        <p>To start the demo, enter your name and a channel ID, then click Join. You will be connected to anyone else who joins using the same ID.</p>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <form class="channel-form form-horizontal">
+                            <div class="form-group">
+                                <label for="name-input" class="col-sm-2 control-label">Your Name:</label>
+                                <div class="col-sm-10">
+                                    <input onClick="this.setSelectionRange(0, this.value.length)" class="form-control" type="text" id="userNameInput" name="name-input" value="" placeholder="Enter name here...">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="start-channel-input" class="col-sm-2 control-label">Channel ID:</label>
+                                <div class="col-sm-10">
+                                    <input onClick="this.setSelectionRange(0, this.value.length)" class="form-control" type="text" id="channelInput" name="start-channel-input" maxlength="255" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="options" class="col-sm-2 control-label">Options:</label>
+                                <div class="col-sm-10">
+                                    <div class="checkbox">
+                                        <label for="audioOnlyInput">
+                                            <input type="checkbox" id="audioOnlyInput">Audio-only
+                                        </label>
+                                        <label for="receiveOnlyInput">
+                                            <input type="checkbox" id="receiveOnlyInput">Receive-only
+                                        </label>
+                                        <label for="simulcastInput">
+                                            <input type="checkbox" id="simulcastInput">Simulcast
+                                        </label>
+                                        <label for="screenShareInput">
+                                            <input type="checkbox" id="screenShareInput">Capture Screen
+                                            <button type="button" class="btn btn-default hidden" id="chromeExtensionInstallButton">Install Chrome Extension</button>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-inline form-group">
+                                <label for="join-type" class="col-sm-2 control-label">Mode:</label>
+                                <div class="col-sm-10">
+                                    <select id="connectionModeInput" name="join-type" class="form-control">
+                                        <option id="connectionSfuModeInput">SFU</option>
+                                        <option id="connectionMcuModeInput">MCU</option>
+                                        <option id="connectionPeerModeInput">Peer-to-Peer</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-inline form-group">
+                                <div class="col-sm-2 col-sm-offset-2">
+                                    <button id="joinButton" class="btn btn-default">Join</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Open-source demos for <b>Android, iOS, .NET, macOS, Java</b> and more, as well as source code for this example are included in the LiveSwitch SDK.</p>
+                        <p>Note that simulcast is not currently available for screen capture.</p>
+                        <p>Note that screen capture is not currently available on mobile devices.</p>
+                        <p>Thank you for trying LiveSwitch! If you have any questions, feel free to contact us.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="video-chat" style="display:none;">
+            <div id="loading"></div>
+            <div class="row table-row">
+                <div class="col-sm-12 col-md-12 col-lg-8">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <div id="video" class="embed-responsive-item"><a href="#" id="fullscreen"><i id="fullscreen-icon" class="fa fa-expand"></i></a></div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4">
+                    <div class="row"><br /></div>
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="btn-toolbar" role="toolbar">
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-default" id="leaveButton">Leave</button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-default" id="toggleAudioMute" data-toggle="tooltip" data-container="body" data-placement="bottom" title="Toggle audio mute.">
+                                        <i class="fa fa-lg fa-microphone" aria-hidden="true"></i>
+                                    </button>
+                                    <button class="btn btn-default" id="toggleVideoPreview" data-toggle="tooltip" data-container="body" data-placement="bottom" title="Toggle video preview.">
+                                        <i class="fa fa-lg fa-eye" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row"><br /></div>
+                    <div class="row"><br /></div>
+                    <div class="row">
+                        <div class="col-md-11">
+                            Audio Device:<br />
+                            <select id="audioDeviceList"></select><br />
+                            Video Device:<br />
+                            <select id="videoDeviceList"></select>
+                        </div>
+                    </div>
+                    <div class="row"><br /></div>
+                    <div class="row" style="height:75%;">
+                        <div class="col-md-11" style="height:100%">
+                            <div class="well" id="eventLog" style="height:100%;overflow-y:scroll;"></div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:20px;">
+                        <div class="col-md-11">
+                            <div class="input-group">
+                                <input id="sendInput" type="text" class="form-control" placeholder="Message...">
+                                <span class="input-group-btn">
+                                    <button id="sendButton" class="btn btn-default" type="button">Send</button>
+                                    <br />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hidden-xs hidden-sm col-md-x col-lg-x">
+        <footer class="footer container-fluid navbar-fixed-bottom">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div id="footer-content" class="text-center text-muted">
+                        <a href="http://twitter.com/frozenmountain" target="_blank"><i style="font-size:18px;" class="fa fa-twitter-square" aria-hidden="true"></i></a>
+                        <a href="http://www.facebook.com/home.php#!/frozenmountain?ref=ts" target="_blank"><i style="font-size:18px;" class="fa fa-facebook-square" aria-hidden="true"></i></a>
+                        <a href="https://www.linkedin.com/company/frozen-mountain-software" target="_blank"><i style="font-size:18px;" class="fa fa-linkedin-square" aria-hidden="true"></i></a><br />
+                        <i class="fa fa-mobile" aria-hidden="true"></i> 1-888-FRZN-MTN (379-6686) <br />
+                        <i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:info@frozenmountain.com">info@frozenmountain.com</a> <br />
+                        &copy;
+                        <script type="text/javascript">document.write(new Date().getFullYear());</script> Copyright
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="log" style="display: none"></div>
+
+    <!-- LiveSwitch 2 libraries -->
+
+    <!--Loading the minified version of javascript by default-->
+    <script>
+        (function () {
+            var debug = false;
+            function isDebugFlagSet(item, index) {
+                if (item.length >= 10 && item.substring(0, 10) == 'debug=true')
+                {
+                    debug = true;
+                }
+            }
+            window.location.href.split('?').forEach(isDebugFlagSet);
+            var src = debug ? "fm.liveswitch.js" : "fm.liveswitch.min.js";
+            document.write('<script type="text/javascript" src="lib/' + src + '"><\/script>');
+        })();
+    </script>
+    <script type="text/javascript" src="js/config.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/Menu.js"></script>
+    <script type="text/javascript" src="js/ContextMenu.js"></script>
+    <script type="text/javascript" src="js/MenuItem.js"></script>
+
+    <script src="js/vendor/jquery-1.11.2.min.js"></script>
+</body>
+</html>

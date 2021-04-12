@@ -56,9 +56,42 @@ fm.liveswitch.Util.addOnLoad(function () {
   
   
   
+  var enterNewChannel = function (channelId) {
   
-  
-  
+    
+    
+        fm.liveswitch.Log.info('Unregistering...');
+        app.leaveAsync(clientUnregistered).then(function (o) {
+            fm.liveswitch.Log.info('Unregistered.');
+    
+        app.channelId = channelId;
+        app.mode =  2; // MCU  // joinType.selectedIndex + 1
+            // Update the UI context.
+           // loading.style.display = 'none';
+           // video.style.display = 'block';
+            // Enable/Disable Audio control button
+           // toggleAudioMute.removeAttribute('disabled');
+          
+             //   toggleAudioMute.style.display = "none";
+        
+            // Register.
+            //fm.liveswitch.Log.info('Registering...');
+            app.setUserName("Anonymous");
+            app.joinAsync(incomingMessage, peerLeft, peerJoined, clientRegistered).then(function (o) {
+                fm.liveswitch.Log.info('Registered.');
+                writeMessage('<b>You\'ve joined session ' + app.channelId + ' as ' + nameInput.value + '.</b>');
+                // Enable the leave button.
+                //leaveButton.removeAttribute('disabled');
+            }, function (ex) {
+                fm.liveswitch.Log.error('Could not joinAsync.', ex);
+                stop();
+            });
+          
+            //    switchToSessionSelectionScreen();
+        }, function (ex) {
+            fm.liveswitch.Log.error('Could not unregister.', ex);
+        });
+}
   
   
   
@@ -68,7 +101,8 @@ fm.liveswitch.Util.addOnLoad(function () {
             window.console.log(channelId);
         }
         if (app.channelId) {
-            return;
+          enterNewChannel(channelId); 
+           return;
         }
         if (channelId.length < 1 || channelId.length > 255) {
             alert('Channel ID must be at least 1 and at most 255 characters long.');
@@ -181,6 +215,10 @@ fm.liveswitch.Util.addOnLoad(function () {
         });
     };
   
+  
+  
+  
+  window.StartUp = startUp; 
   
   
   
@@ -647,16 +685,6 @@ fm.liveswitch.Util.addOnLoad(function () {
     if (channelId) {
       //  startSessionInput.value = channelId;
     }
-  
-  
-  
-  
- startUp("1");
-  
-  
-  
-  
-  
   
 });
 var getHashParameter = function (name) {
