@@ -178,11 +178,24 @@ fetch("/ShowState"+ShowID)
 }
 
 
-
+var currentShow = ""; 
  
 socket.on('show-state-change', function(msg) {
    console.log(msg);
         GetShowState(ShowID, GroupID, PlayerID);
+  
+  
+  var showValue = "show"+ShowID+"-"+GroupID; 
+      var Message = "Currently With Show : " + "show"+ShowID+"-group"+GroupID; 
+    if (currentShow != showValue)
+      {
+        currentShow = showValue; 
+       // window.StartUp(currentShow.toString());
+        window.StartUp("show"+ShowID, "-group"+GroupID);
+      }
+  
+  
+  
   
   });
 

@@ -59,44 +59,99 @@ var chat;
         App.prototype.setUserName = function (userName) {
             this.userName = userName;
         };
-      
-      
-    
-
         App.prototype.startLocalMedia = function (videoContainer, captureScreen, audioOnly, receiveOnly, simulcast, audioDeviceList, videoDeviceList) {
           
           
-            if (audioDeviceList) {
+          
+          
+          
+          
+          
+          
+          
+          
+            var _this = this;
+            var promise = new fm.liveswitch.Promise();
+            try {
+                if (this.localMedia != null) {
+                    throw new Error("Local media has already been started.");
+                }
+                this.audioOnly = audioOnly;
+                this.receiveOnly = receiveOnly;
+                this.simulcast = simulcast;
+              
+              
+          
+          
+              
+               // var pluginConfig = new fm.liveswitch.PluginConfig();
+               // pluginConfig.setActiveXPath("https://cdn.glitch.com/bf2313d4-5d97-4ee7-90d5-577c2ed80e8a%2FFM.LiveSwitch.ActiveX.cab?v=1618442273977"); 
+                                            //../FM.LiveSwitch.ActiveX.cab");
+              //  fm.liveswitch.Plugin.install(pluginConfig).then(function (result) 
+                    // Check if this browser is supported with local media (if not receive-only).
+               
+              /*                                                  
+              if (!fm.liveswitch.Plugin.isReady(!_this.receiveOnly)) {
+                        // Check if this browser is supported without local media.
+                        if (fm.liveswitch.Plugin.isReady()) {
+                            promise.reject(new Error('This browser supports WebRTC, but does not support media capture.\nTry receive-only mode!'));
+                        }
+                        else {
+                            promise.reject(new Error('This browser does not support WebRTC, and no plugin could be found.'));
+                        }
+                        return;
+                    } 
+                    */
+                  
+                    // Set up the layout manager.
+                    _this.layoutManager = new fm.liveswitch.DomLayoutManager(videoContainer);
+                    // Set up the local media.
+                    var audio = true;
+                    if (fm.liveswitch.Util.isChrome() && _this.enableOpusStereo) {
+                        // Work around to enable stereo microphone for chrome bug.
+                        // Note this disables echoCancellation.
+                        // https://bugs.chromium.org/p/webrtc/issues/detail?id=8133
+                        audio = {
+                            echoCancellation: false,
+                            noiseSuppression: false,
+                            channelCount: 2
+                        };
+                    }
+                    if (audioDeviceList) {
                         audioDeviceList.options.length = 0;
                     }
                     if (videoDeviceList) {
                         videoDeviceList.options.length = 0;
                     }
+                    if (!_this.receiveOnly) {
+                        if (!_this.audioOnly) {
+                          
+                          
+                          
           
-          
-        var promise = new fm.liveswitch.Promise();
-        this.layoutManager = new fm.liveswitch.DomLayoutManager(videoContainer);
-       /* this.localMedia = new fm.liveswitch.LocalMedia(
-            true,
-            new fm.liveswitch.VideoConfig(640, 480, 30),
-            false
-        );*/
-          
-       var audio = true;
-        var video = new fm.liveswitch.VideoConfig(this.videoWidth, this.videoHeight, this.videoFps);
-         this.localMedia = new fm.liveswitch.LocalMedia(audio, video, false);
-          
-          
-        this.localMedia.start().then(
-            o => {
-              
-              
-              
-              // Audio device selection.
+               _this.localMedia = new fm.liveswitch.LocalMedia(  true,new fm.liveswitch.VideoConfig(640, 480, 30),false );
+                          
+                          
+                    /*      
+                          var video = captureScreen ? new fm.liveswitch.VideoConfig(window.screen.width, window.screen.height, 3) : new fm.liveswitch.VideoConfig(_this.videoWidth, _this.videoHeight, _this.videoFps);
+                            _this.localMedia = new fm.liveswitch.LocalMedia(audio, video, captureScreen);
+                            if (_this.simulcast) {
+                                _this.localMedia.setVideoSimulcastDisabled(!_this.simulcast);
+                            }
+                        }
+                        else {
+                            _this.localMedia = new fm.liveswitch.LocalMedia(audio, null, captureScreen);
+                        }
+                        */
+                  
+                          
+                        // Start the local media.
+                        _this.localMedia.start().then(function (o) {
+                            // Audio device selection.
                             if (audioDeviceList) {
                                 audioDeviceList.options.length = 0;
-                                var currentAudioSourceInput_1 = this.localMedia.getAudioSourceInput();
-                                 this.localMedia.getAudioSourceInputs().then(function (inputs) {
+                                var currentAudioSourceInput_1 = _this.localMedia.getAudioSourceInput();
+                                _this.localMedia.getAudioSourceInputs().then(function (inputs) {
                                     for (var _i = 0, inputs_1 = inputs; _i < inputs_1.length; _i++) {
                                         var input = inputs_1[_i];
                                         var option = document.createElement('option');
@@ -111,8 +166,8 @@ var chat;
                             if (videoDeviceList) {
                                 videoDeviceList.options.length = 0;
                                 if (!audioOnly && !captureScreen) {
-                                    var currentVideoSourceInput_1 = this.localMedia.getVideoSourceInput();
-                                    this.localMedia.getVideoSourceInputs().then(function (inputs) {
+                                    var currentVideoSourceInput_1 = _this.localMedia.getVideoSourceInput();
+                                    _this.localMedia.getVideoSourceInputs().then(function (inputs) {
                                         for (var _i = 0, inputs_2 = inputs; _i < inputs_2.length; _i++) {
                                             var input = inputs_2[_i];
                                             var option = document.createElement('option');
@@ -124,30 +179,116 @@ var chat;
                                     });
                                 }
                             }
-              
-              
-              
-              
-              
-              
-              
-              
-              
-                var localView = this.localMedia.getView();
-                if (localView != null) {
-                    localView.id = "localView";
-                    this.layoutManager.setLocalView(localView);
+                            if (!audioOnly) {
+                                var localView = _this.localMedia.getView();
+                                if (localView != null) {
+                                    localView.id = 'localView';
+                                    _this.layoutManager.setLocalView(localView);
+                                    // Set up the Context Menu
+                                    _this.localContextMenu = _this.createLocalContextMenu(_this.localMedia.getVideoEncodings());
+                                    _this.localContextMenu.bindTo(localView);
+                                }
+                            }
+                            promise.resolve(null);
+                        }, function (ex) {
+                            if (audioOnly) {
+                                promise.reject(ex);
+                            }
+                            else if (captureScreen && fm.liveswitch.Plugin.getChromeExtensionRequired() && !fm.liveswitch.Plugin.getChromeExtensionInstalled()) {
+                                _this.chromeExtensionInstallButton.removeAttribute('class');
+                                promise.reject(new Error(ex + '\n\nClick "Install Screen-Sharing Extension" to install screen-sharing extension.'));
+                            }
+                            else if (captureScreen) {
+                                promise.reject(ex);
+                            }
+                            else {
+                                // Try with a static image since a camera may not be available.
+                                var canvas_1 = document.getElementById('localCanvasSource');
+                                var canvasFrameRate_1 = 3;
+                                if (!canvas_1) {
+                                    // Create the canvas if it doesn't exist yet.
+                                    canvas_1 = document.createElement('canvas');
+                                    canvas_1.id = 'localCanvasSource';
+                                    canvas_1.style.position = 'absolute';
+                                    document.body.appendChild(canvas_1);
+                                    // Load a static image.
+                                    var image_1 = new Image();
+                                    image_1.onload = function () {
+                                        // Resize the canvas to match the image size.
+                                        canvas_1.width = image_1.width;
+                                        canvas_1.height = image_1.height;
+                                        canvas_1.style.left = '-' + image_1.width + 'px';
+                                        canvas_1.style.top = '-' + image_1.height + 'px';
+                                        // Draw the initial image.
+                                        var context = canvas_1.getContext('2d');
+                                        context.drawImage(image_1, 0, 0, image_1.width, image_1.height, 0, 0, canvas_1.width, canvas_1.height);
+                                        // Refresh the image on a regular interval.
+                                        window.setInterval(function () {
+                                            context.clearRect(0, 0, canvas_1.width, canvas_1.height);
+                                            context.drawImage(image_1, 0, 0, image_1.width, image_1.height, 0, 0, canvas_1.width, canvas_1.height);
+                                        }, 1000.0 / canvasFrameRate_1);
+                                    };
+                                    image_1.src = 'images/static.jpg';
+                                }
+                                // try local media with stream
+                                var canvasStream = canvas_1.captureStream(canvasFrameRate_1);
+                                _this.localMedia = new fm.liveswitch.LocalMedia(audio, canvasStream, false);
+                                _this.localMedia.start().then(function (o) {
+                                    var localView = _this.localMedia.getView();
+                                    if (localView != null) {
+                                        _this.layoutManager.setLocalView(localView);
+                                    }
+                                    promise.resolve(null);
+                                }, function (ex) {
+                                    promise.reject(ex);
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        // Handle Safari permissions handling bug when it is receive-only
+                        if (fm.liveswitch.Util.isSafari()) {
+                            _this.localMedia = new fm.liveswitch.LocalMedia(true, false);
+                            _this.localMedia.start().then(function (lm) {
+                                if (fm.liveswitch.Util.isiOS()) {
+                                    // Safari iOS and iPadOS requires local media access to play audio
+                                    // Audio will not be sent to remote clients but muting the mic as a precautionary measure
+                                    lm.setAudioMuted(true);
+                                    promise.resolve(null);
+                                }
+                                else {
+                                    // Safari (not iOS) requires to start then stop the local media to play audio
+                                    lm.stop().then(function (x) {
+                                        // Tear down the local media.
+                                        if (this.localMedia != null) {
+                                            this.localMedia.destroy();
+                                            this.localMedia = null;
+                                        }
+                                        promise.resolve(null);
+                                    }, function (ex) {
+                                        promise.reject(ex);
+                                    });
+                                }
+                            }, function (ex) {
+                                promise.reject(ex);
+                            });
+                        }
+                        else {
+                            promise.resolve(null);
+                        }
+                    }
+                    ;
                 }
-                promise.resolve(null);
-            },
-            ex => {
-                fm.liveswitch.log.debug("error", ex);
+              /*, function (ex) {
+                    promise.reject(ex);
+                }*/
+              //);
             }
-        );
-        return promise;
-    };
-          
-           
+            catch (ex) {
+                promise.reject(ex);
+            }
+            return promise;
+        };
         App.prototype.stopLocalMedia = function () {
             var _this = this;
             var promise = new fm.liveswitch.Promise();

@@ -4,6 +4,12 @@
   box-sizing: border-box;
 }
 
+/* This only changes this particular animation duration */
+.animate__animated.animate__bounce {
+  --animate-duration: 10s;
+}
+
+
 body {
   font-family: sans-serif;
   margin: 0em 0em;

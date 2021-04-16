@@ -1,0 +1,29 @@
+large group channel 60 persons - mcu 
+----- ------ ----- 
+
+join performer's channel 
+
+
+performer broadcast channel - sfu 
+
+
+your team channel  - sfu 
+6 person groups , performer stream is joined to team channel. 
+
+60 person groups, everyone subscribes to an SFU receive-only performer stream, performer subscribes to MCU stream 
+
+5 12 perosn groups
+
+3 20 person groups 
+ (18 / 18 / 24)
+ (18 / 18 / 24)
+ 
+ your 6 + 12 A-(BC) / B-(CA) / C-(AB)
+  your 6 + 12
+   your 6 + 18
+   
+   
+  send and receieve channel 1
+  receiveonly  MCU channel BC
+  send MCU AB 
+  send MCU CA

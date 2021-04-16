@@ -249,7 +249,7 @@ fetch("/ShowState"+ShowID)
   .then(BarConfigurationResponse => {
  // appendShowState(BarConfigurationResponse, BarConfiguration);  
   console.log(BarConfigurationResponse);
-
+ 
   });
 }
 
@@ -265,7 +265,8 @@ const DreamsConfiguration = document.getElementById("DreamConfiguration");
    // Rebuild(msg); 
     
     
-    //console.log(msg);
+    console.log('cacheAttractionState');
+    console.log(msg);
     //console.log();
     var values = msg["SectionsManager"][Stagestrings_a[0]]["CurrentShows"]; 
    // console.log(values);//]
@@ -273,7 +274,13 @@ const DreamsConfiguration = document.getElementById("DreamConfiguration");
     if (currentShow != values[0])
       {
         currentShow = values[0]; 
-        window.StartUp(currentShow.toString());
+        window.StartUp("show"+currentShow, "admin-lounge");
+     
+   document.getElementById("video").classList.remove('animate__animated');
+   document.getElementById("video").classList.remove('animate__bounce');
+   document.getElementById("video").classList.add('animate__animated');
+   document.getElementById("video").classList.add('animate__bounce');
+        
       }
     var label = createElement("label",{"class":""}, Message),
     div = createElement("div",{"class":"", "id":"CurrentState"}),
@@ -287,6 +294,7 @@ const DreamsConfiguration = document.getElementById("DreamConfiguration");
 
  
 socket.on('channel-change', function(msg) {
+   console.log('channel-change');
    console.log(msg);
      //   GetShowState(ShowID, GroupID, PlayerID);
   
