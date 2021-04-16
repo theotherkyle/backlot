@@ -56,15 +56,11 @@ fm.liveswitch.Util.addOnLoad(function () {
   
   
   
-  var enterNewChannel = function (channelId) {
-  
-    
-    
-        fm.liveswitch.Log.info('Unregistering...');
-        app.leaveAsync(clientUnregistered).then(function (o) {
-            fm.liveswitch.Log.info('Unregistered.'); 
+  var enterNewChannelNoExit = function (channelId) {
+   
     
         app.channelId = channelId;
+        
         app.mode =  2; // MCU  // joinType.selectedIndex + 1
             // Update the UI context.
            // loading.style.display = 'none';
@@ -86,17 +82,30 @@ fm.liveswitch.Util.addOnLoad(function () {
                 fm.liveswitch.Log.error('Could not joinAsync.', ex);
                 stop();
             });
+    
+  }
+  
+  
+  var enterNewChannel = function (channelId) {
+  
+     // enterNewChannelNoExit(channelId);
+    
+        fm.liveswitch.Log.info('Unregistering...');
+        app.leaveAsync(clientUnregistered).then(function (o) {
+            fm.liveswitch.Log.info('Unregistered.');
+                enterNewChannelNoExit(channelId);
           
             //    switchToSessionSelectionScreen();
         }, function (ex) {
             fm.liveswitch.Log.error('Could not unregister.', ex);
         });
+        
 }
   
   
   
   
-    var startUp = function (channelId) {
+    var startUp = function (channelId, groupId) {
         if (window.console && window.console.log) {
             window.console.log(channelId);
         }
@@ -113,6 +122,7 @@ fm.liveswitch.Util.addOnLoad(function () {
             app.applicationId = applicationId;
         }
         app.channelId = channelId;
+        app.groupId = groupId; 
         app.mode =  2; // MCU  // joinType.selectedIndex + 1;
         // Switch the UI context.
         setHashParameter('channel', app.channelId);
@@ -200,6 +210,8 @@ fm.liveswitch.Util.addOnLoad(function () {
             fm.liveswitch.Log.info('Registering...');
             app.setUserName("Anonymous");
             app.joinAsync(incomingMessage, peerLeft, peerJoined, clientRegistered).then(function (o) {
+              
+               // enterNewChannelNoExit(channelId+groupId);
                 fm.liveswitch.Log.info('Registered.');
                 writeMessage('<b>You\'ve joined session ' + app.channelId + ' as ' + nameInput.value + '.</b>');
                 // Enable the leave button.

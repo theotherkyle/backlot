@@ -24,6 +24,13 @@
     <title>Welcome to Glitch!</title>
 
     <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+  
+  
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+  
     <!-- import the webpage's stylesheet -->
     <link rel="stylesheet" href="/player-style.css">
 
@@ -46,6 +53,7 @@
     <link rel="stylesheet" href="../css/vendor/bootstrap/3.3.7/bootstrap.css">
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/menu.css">
+  
 
     <script src="../js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 
@@ -75,7 +83,7 @@
       
       <form>
       
-        <label>
+        <label class="animate__animated animate__bounce">
           Stage Name
           <!--input name="group" type="text" maxlength="100" required placeholder="Stage Name" -->
           
@@ -113,9 +121,11 @@
         </ul>
       </section>
     </main>
-
-
-
+  
+    <div id="test-videocontainer">
+       
+    </div>
+     
     <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -178,12 +188,15 @@
 
     <div id="log" style="display: none"></div>
 
-    <!-- LiveSwitch 2 libraries -->
-
+       
+    
+    
+    
+    
     <!--Loading the minified version of javascript by default-->
     <script>
         (function () {
-            var debug = false;
+            var debug = true;
             function isDebugFlagSet(item, index) {
                 if (item.length >= 10 && item.substring(0, 10) == 'debug=true')
                 {
@@ -195,6 +208,9 @@
             document.write('<script type="text/javascript" src="../lib/' + src + '"><\/script>');
         })();
     </script>
+    
+  <!--script src="https://demo.liveswitch.io/lib/fm.liveswitch.js"></script -->
+    
     <script type="text/javascript" src="../js/config.js"></script>
     <script type="text/javascript" src="../js/app.js"></script>
     <script type="text/javascript" src="../js/liveswitch-app.js"></script>
@@ -203,6 +219,10 @@
     <script type="text/javascript" src="../js/MenuItem.js"></script>
 
     <script src="../js/vendor/jquery-1.11.2.min.js"></script>
+    
+    
+
+   
 </body>
 </html>
 

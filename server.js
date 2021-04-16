@@ -6,7 +6,7 @@
 /* eslint-env es6 */
 
 /*
- * Dependencies
+ * Dependencies 
  */
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -15,11 +15,11 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 const Square = require('./src/services/square.js');
-const mySquare = new Square(2);
+const mySquare = new Square(2);;
 
+ 
 
-
-
+ 
 function DebugServerConsole (vars)
 {
   console.log( "MAIN SERVER :" + vars);
