@@ -149,21 +149,29 @@ function appendShowState( strings, DivConfiguration) {
   var showID = strings.ID; 
   var time = strings.Time; 
   var timeRemaining = strings.TimeRemaining; 
-  //var LabelText = strings.initalLabel ; 
- // if (tap.State == strings.state) LabelText = strings.altLabel ;
 var label = createElement("label",{"class":""}, showID),
     div = createElement("div",{"class":"", "id":"CurrentState"}),
-    //button = createElement("button",{"type":"submit","id":"button-"+tapID},LabelText),
     newListItem = createElement("div",{"id":"CurrentStateDiv", "class":""},[label,div]);
   DivConfiguration.innerHTML = "" ; 
   DivConfiguration.appendChild(newListItem);
- /* var taptapName = '#button-'+tapID; 
-     $(taptapName).click(function(){
-       var textContent = $(taptapName).text()  ; 
-      if  (textContent == strings.altLabel)
-        socket.emit(strings.emitAlt, tap.ID); 
-     else  socket.emit(strings.emitBase, tap.ID);
-    });*/
+  
+var showIDUrl = showID.replace(/\s+/g, '');
+  
+  //fetch()
+  fetch("/scenetemplates/"+showIDUrl+".html")
+ .then(response => response.text()) // parse the JSON from the server
+  .then(response => {
+        
+        
+var  test_sceneTemplate = document.getElementById("test-scenetemplate");
+
+     // testvideocontainer.innerHTML = response; 
+        
+        setHTML(test_sceneTemplate, response, true);
+    });
+  
+  
+  
   
   }
 

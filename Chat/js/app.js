@@ -445,7 +445,7 @@ var chat;
             // Float the local preview over the mixed video feed for an improved user experience.
             this.layoutManager.addOnLayout(function (layout) {
                 if (_this.mcuConnection != null && !_this.receiveOnly && !_this.audioOnly) {
-                   // fm.liveswitch.LayoutUtility.floatLocalPreview(layout, _this.videoLayout, _this.mcuConnection.getId(), _this.mcuViewId, _this.localMedia.getVideoSink());
+                    fm.liveswitch.LayoutUtility.floatLocalPreview(layout, _this.videoLayout, _this.mcuConnection.getId(), _this.mcuViewId, _this.localMedia.getVideoSink());
                 }
             });
             // Open the connection.
@@ -958,11 +958,74 @@ var chat;
                 if (!videoPreview) {
                     return false;
                 }
-                if (videoPreview.style.display == 'none') {
+              
+              
+ 
+  var canvas = document.getElementById('canvas');
+              canvas
+  var ctx = canvas.getContext('2d');
+             ctx.canvas.width  = 200; 
+             ctx.canvas.height  = 40; 
+  //document.getElementById('video');
+      var remoteviewID = lm.doGetRemoteViewsIds();
+              
+            var remoteviews =   lm.doGetRemoteViews(remoteviewID[0]);
+  var video =    remoteviews[0].firstChild ;
+              
+              //https://developer.liveswitch.io/reference/ts/api/classes/fm.liveswitch.videolayoutregion.html
+         
+                  
+                  var __this = this; 
+                   
+             // videoPreview.firstChild  ;
+
+ // video.addEventListener('play', function() 
+              {
+   //var $this = this; //cache
+                
+                var ticker_width = 100; 
+                var ticker_height = 100; 
+    function loop() {
+        var vl_regions =     __this.videoLayout.getRegions(); 
+            ctx.canvas.width  = vl_regions.length * ticker_width; 
+            ctx.canvas.height  = ticker_height; 
+          var ctx_x = 0; 
+              for (var vl_i=0; vl_i <  vl_regions.length; vl_i++)
+                {
+                  var vl_frame =  vl_regions[vl_i].getFrame(); 
+                  var vl_bounds =  vl_regions[vl_i].getBounds(); 
+                  var x = vl_frame.getX() + vl_bounds.getX(), 
+                      y = vl_frame.getY() + vl_bounds.getY(), 
+                      width = vl_bounds.getWidth(), 
+                      height = vl_bounds.getHeight(); 
+                  
+                  
+      //context.drawImage(img, sx, sy, swidth, sheight, x, y, width, height);
+        ctx.drawImage(video, x, y, width, height, ctx_x, 0, ticker_width, ticker_height);
+                  ctx_x += ticker_width; 
+                    
+                }
+      
+            // 
+      //if (!$this.paused && !$this.ended) {
+//        ctx.drawImage(video, 0, 0);
+        setTimeout(loop, 1000 / 30); // drawing at 30fps
+      }
+                loop() ; 
+    };//)();
+  //}, 0);
+//});
+              
+               // var layout = lm.getLayout(320, 240, videoPreview, 0, null, null, null);
+               
+               //var localFrame = layout.getLocalFrame();
+               // localFrame.setX(0); 
+               if (videoPreview.style.display == 'none') {
                     videoPreview.style.display = '';
                     return true;
                 }
                 videoPreview.style.display = 'none';
+              
                 return false;
             }
             else {
