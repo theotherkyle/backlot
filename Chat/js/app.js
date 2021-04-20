@@ -16,6 +16,7 @@ var chat;
             this.peerConnections = {};
             this.remoteMediaMaps = {};
             this.localMedia = null;
+            this.localMedia3 = null;
             this.layoutManager = null;
             this.videoLayout = null;
             this.audioOnly = false;
@@ -60,11 +61,95 @@ var chat;
             this.userName = userName;
         };
       
-      
-    
 
-        App.prototype.startLocalMedia = function (videoContainer, captureScreen, audioOnly, receiveOnly, simulcast, audioDeviceList, videoDeviceList) {
+       //   App.prototype.startLocalMediaWImage  = function (videoContainer, captureScreen, audioOnly, receiveOnly, simulcast, audioDeviceList, videoDeviceList) {
+       
+     App.prototype.startLocalMediaWImage  = function () {
+         
+        var promise = new fm.liveswitch.Promise();   
+           var _this = this; 
+     //   this.layoutManager = new fm.liveswitch.DomLayoutManager(videoContainer);
+       var audio = true;
+
+          var canvas = document.getElementById('localCanvasSource');
+      var canvasFrameRate = 3;
+if (!canvas) {
+    // Create the canvas if it doesn't exist yet.
+    canvas = document.createElement('canvas');
+  
+  canvas.crossOrigin = "Anonymous";
+ // canvas.setAttribute(crossOrigin="anonymous")
+    canvas.id = 'localCanvasSource';
+    canvas.style.position = 'absolute';
+    document.body.appendChild(canvas);
+    // Load a static image.
+    var image = new Image();
+  
+  image.crossOrigin = "Anonymous";
+    image.onload = function() {
+        // Resize the canvas to match the image size.
+        canvas.width = 1280;// image.width;
+        canvas.height = 720;// image.height;
+        canvas.style.left =  image.width + 'px';
+        canvas.style.top = image.height + 'px';
+        // Draw the initial image.
+        var context = canvas.getContext('2d');
+        //context.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+        // Refresh the image on a regular interval
+var audio = false;
+var video =canvas.captureStream(30);
           
+      //    canvas.captureStream(30).getVideoTracks()[0];
+ _this.localMedia3  = new fm.liveswitch.LocalMedia(audio, video);    
+     //  var video = new fm.liveswitch.VideoConfig(this.videoWidth, this.videoHeight, this.videoFps);
+       //  this.localMedia = new fm.liveswitch.LocalMedia(audio, video, false);
+        _this.localMedia3.start().then(
+            o => {
+              
+                  var lm = _this.layoutManager;
+            if (lm != null) {
+                var videoPreview = lm.getLocalView();
+                if (!videoPreview) {
+                    return false;
+                }
+                var video =    videoPreview.firstChild ;
+        window.setInterval(function() {
+            //context.clearRect(0, 0, canvas.width, canvas.height);
+          //  context.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+                         
+              
+context.beginPath();
+context.rect(0,0, canvas.width, canvas.height);
+context.fillStyle = "red";
+context.fill();
+    
+          
+          
+            _this.drawIntoCanvas(video, context); 
+          
+        }, 30);
+            }
+              
+              
+          /*      var localView = _this.localMedia.getView();
+                if (localView != null) {
+                    localView.id = "localView";
+                    _this.layoutManager.setLocalView(localView);
+                   
+                } */
+                promise.resolve(null);      
+            },
+            ex => {
+                fm.liveswitch.log.debug("error", ex);
+            }
+        );
+    }  
+              image.src = 'https://cdn.glitch.com/bf2313d4-5d97-4ee7-90d5-577c2ed80e8a%2FSLIME-boards.MissionsB.jpeg?v=1618759015966';
+    };  
+        return promise;
+   };
+      
+        App.prototype.startLocalMedia = function (videoContainer, captureScreen, audioOnly, receiveOnly, simulcast, audioDeviceList, videoDeviceList) {
           
             if (audioDeviceList) {
                         audioDeviceList.options.length = 0;
@@ -72,26 +157,19 @@ var chat;
                     if (videoDeviceList) {
                         videoDeviceList.options.length = 0;
                     }
-          
-          
-        var promise = new fm.liveswitch.Promise();
+        var promise = new fm.liveswitch.Promise();   
+           var _this = this; 
         this.layoutManager = new fm.liveswitch.DomLayoutManager(videoContainer);
        /* this.localMedia = new fm.liveswitch.LocalMedia(
             true,
             new fm.liveswitch.VideoConfig(640, 480, 30),
             false
         );*/
-          
        var audio = true;
-        var video = new fm.liveswitch.VideoConfig(this.videoWidth, this.videoHeight, this.videoFps);
-         this.localMedia = new fm.liveswitch.LocalMedia(audio, video, false);
-          
-          
-        this.localMedia.start().then(
+         var video = new fm.liveswitch.VideoConfig(this.videoWidth, this.videoHeight, this.videoFps);
+        this.localMedia = new fm.liveswitch.LocalMedia(audio, video, false);
+        _this.localMedia.start().then(
             o => {
-              
-              
-              
               // Audio device selection.
                             if (audioDeviceList) {
                                 audioDeviceList.options.length = 0;
@@ -125,27 +203,23 @@ var chat;
                                 }
                             }
               
+             
               
-              
-              
-              
-              
-              
-              
-              
-                var localView = this.localMedia.getView();
+                var localView = _this.localMedia.getView();
                 if (localView != null) {
                     localView.id = "localView";
-                    this.layoutManager.setLocalView(localView);
+                    _this.layoutManager.setLocalView(localView);
                 }
                 promise.resolve(null);
+              //this.startLocalMediaWImage(); 
             },
             ex => {
                 fm.liveswitch.log.debug("error", ex);
             }
-        );
+        );  
         return promise;
-    };
+   };
+
           
            
         App.prototype.stopLocalMedia = function () {
@@ -392,6 +466,7 @@ var chat;
                 connection = this.channel[channel_i].createMcuConnection(audioStream, dataStream);
             }
             else {
+                //var videoStream = new fm.liveswitch.VideoStream(this.localMedia3, remoteMedia);
                 var videoStream = new fm.liveswitch.VideoStream(this.localMedia, remoteMedia);
                 if (this.receiveOnly) {
                     videoStream.setLocalDirection(fm.liveswitch.StreamDirection.ReceiveOnly);
@@ -951,6 +1026,29 @@ var chat;
             }
             return config.getLocalAudioMuted();
         };
+      
+        App.prototype.drawIntoCanvas = function (video, ctx) {
+                 
+    //    var vl_regions =     __this.videoLayout.getRegions(); 
+              var ctx_x = 0; 
+                 // var vl_frame =  vl_regions[vl_i].getFrame(); 
+                  //var vl_bounds =  vl_regions[vl_i].getBounds(); 
+                  var x = 0,// vl_frame.getX() + vl_bounds.getX(), 
+                      y = 0,//  vl_frame.getY() + vl_bounds.getY(), 
+                      width = 640,// vl_bounds.getWidth(), 
+                      height = 480,
+                      ticker_width = 640, 
+                      ticker_height = 480;// vl_bounds.getHeight(); 
+                  
+      //context.drawImage(img, sx, sy, swidth, sheight, x, y, width, height);
+        ctx.drawImage(video, x, y, width, height, ctx_x, 0, ticker_width, ticker_height);
+               //   ctx_x += ticker_width; 
+               
+        
+        }
+      
+      
+      
         App.prototype.toggleVideoPreview = function () {
             var lm = this.layoutManager;
             if (lm != null) {
@@ -1000,6 +1098,14 @@ var chat;
                       height = vl_bounds.getHeight(); 
                   
                   
+              
+//ctx.beginPath();
+//ctx.rect(x, y, width, height);
+//ctx.fillStyle = "red";
+//ctx.fill();
+    
+                  
+                  
       //context.drawImage(img, sx, sy, swidth, sheight, x, y, width, height);
         ctx.drawImage(video, x, y, width, height, ctx_x, 0, ticker_width, ticker_height);
                   ctx_x += ticker_width; 
@@ -1036,7 +1142,8 @@ var chat;
             return this.localMedia.changeAudioSourceInput(new fm.liveswitch.SourceInput(id, name));
         };
         App.prototype.changeVideoDevice = function (id, name) {
-            return this.localMedia.changeVideoSourceInput(new fm.liveswitch.SourceInput(id, name));
+          var input = new fm.liveswitch.SourceInput(id, name); 
+            return this.localMedia.changeVideoSourceInput(input);
         };
         App.prototype.toggleSendEncoding = function (sender) {
             var index = sender.index;

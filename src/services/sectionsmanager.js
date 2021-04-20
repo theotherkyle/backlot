@@ -25,10 +25,10 @@ module.exports = class sectionsmanager extends EventEmitter {
                         "0 - Arrivals":{Time:15000, CurrentShows:[], id:0},
                        "1 - Welcome":{ Time:4000, CurrentShows:[], id:1}, 
                         "1 - Workshop":{Time:15000, CurrentShows:[], id:2}, 
-                      //  "1 - Common":{ Time:2000, CurrentShows:[]}, 
+                        "1 - Common":{ Time:2000, CurrentShows:[], id:3},  // 0
                         "2 - Keynote":{  Time:3000, CurrentShows:[], id:3}, 
-                         "2- Orientation":{  Time:2000, CurrentShows:[], id:4}, //3
-                         "3 - Missions":{ Time:180000, CurrentShows:[], id:5}, //21
+                         "2- Orientation":{  Time:3000, CurrentShows:[], id:4}, //3 //2000
+                         "3 - Missions":{ Time:210000, CurrentShows:[], id:5}, //21 //180000
                          "4 - Ivor":{  Time:5000, CurrentShows:[], id:6},//6
                          "4 - Apt":{  Time:10000, CurrentShows:[], id:7},
                          "5 - Janine":{ Time:2000, CurrentShows:[], id:8},
@@ -40,10 +40,10 @@ module.exports = class sectionsmanager extends EventEmitter {
   this.ShowStructure = [{"ID":"0 - Arrivals", Time:15000, troupe:0, stages:[0]},
                    {"ID":"1 - Welcome", Time:4000, troupe:1 , stages:[1]}, 
                    {"ID":"1 - Workshop", Time:15000, troupe:2, stages:[2]}, 
-                   //{"ID":"1 - Common", Time:2000, TimeC:"00:01:00"}, 
+                   {"ID":"1 - Common", Time:2000, TimeC:"00:01:00", stages:[]}, // 0
                    {"ID":"2 - Keynote", Time:3000, troupe:3, stages:[3]}, 
-                   {"ID":"2- Orientation", Time:2000, troupe:3, stages:[]}, 
-                   {"ID":"3 - Missions",Time:18000,  troupe:4, stages:[4,5]}, 
+                   {"ID":"2- Orientation", Time:3000, troupe:3, stages:[]},  //3 //2000
+                   {"ID":"3 - Missions",Time:21000,  troupe:4, stages:[4,5]}, //21 //180000
                    {"ID":"4 - Ivor", Time:5000, troupe:5, stages:[]},
                    {"ID":"4 - Apt", Time:10000, troupe:5, stages:[6]},
                    {"ID":"5 - Janine", Time:2000, troupe:6, stages:[7]},

@@ -14,13 +14,14 @@ module.exports = class ShowSession extends EventEmitter {
   this.CurrentPosition = -1;
 //    this.NextTimeOut = null; 
     
+    
   this.Structure = [{"ID":"0 - Arrivals", Time:15000, TimeC:"00:15:00"},
                    {"ID":"1 - Welcome", Time:4000, TimeC:"00:03:00"}, 
                    {"ID":"1 - Workshop", Time:15000, TimeC:"00:06:00"}, 
-                   //{"ID":"1 - Common", Time:2000, TimeC:"00:01:00"}, 
+                   {"ID":"1 - Common", Time:2000, TimeC:"00:01:00"}, // 0
                    {"ID":"2 - Keynote", Time:3000, TimeC:"00:02:00"}, 
-                   {"ID":"2- Orientation", Time:2000, TimeC:"00:03:00"}, 
-                   {"ID":"3 - Missions",Time:18000,  TimeC:"00:30:00"}, 
+                   {"ID":"2- Orientation", Time:3000, TimeC:"00:03:00"}, //3 //2000
+                   {"ID":"3 - Missions",Time:21000,  TimeC:"00:30:00"}, //21 //180000
                    {"ID":"4 - Ivor", Time:5000, TimeC:"00:03:00"},
                    {"ID":"4 - Apt", Time:10000, TimeC:"00:12:00"},
                    {"ID":"5 - Janine", Time:2000, TimeC:"00:02:00"},
