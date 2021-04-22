@@ -307,7 +307,7 @@ footer {
   -webkit-animation-name: ticker;
   animation-name: ticker;
   -webkit-animation-duration: 10s;
-  animation-duration: 10s;
+  animation-duration: 25s;
 }
 .ticker-wrap .ticker__item {
   display: inline-block;

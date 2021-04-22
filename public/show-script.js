@@ -156,31 +156,56 @@ var label = createElement("label",{"class":""}, showID),
   DivConfiguration.appendChild(newListItem);
   
 var showIDUrl = showID.replace(/\s+/g, '');
-  
-  //fetch()
-  fetch("/scenetemplates/"+showIDUrl+".html")
- .then(response => response.text()) // parse the JSON from the server
-  .then(response => {
-        
-        
-var  test_sceneTemplate = document.getElementById("test-scenetemplate");
-
-     // testvideocontainer.innerHTML = response; 
-        
-        setHTML(test_sceneTemplate, response, true);
-    });
+  SetSceneTemplate(showIDUrl); 
   
   
   
   
   }
 
+
+function SetSceneTemplate(showIDUrl)
+{
+  
+   
+  //fetch()
+  fetch("/scenetemplates/"+showIDUrl+".html")
+ .then(response => response.text()) // parse the JSON from the server
+  .then(response => {
+        
+        var  test_sceneTemplate = document.getElementById("test-scenetemplate");
+
+             // testvideocontainer.innerHTML = response; 
+
+                setHTML(test_sceneTemplate, response, true);
+
+
+        });
+}
+
+
 function GetShowState(ShowID, GroupID, PlayerID){
 fetch("/ShowState"+ShowID)
   .then(response => response.json()) // parse the JSON from the server
   .then(BarConfigurationResponse => {
+  
+  if(BarConfigurationResponse["Error"])
+    {
+    console.log("This Show Hasn't Started Yet");
+      
+       SetSceneTemplate("0-NoShow"); 
+  
+      
+      
+      
+    }
+  else 
+    {    
   appendShowState(BarConfigurationResponse, BarConfiguration);  
   console.log(BarConfigurationResponse);
+      
+    }
+  
 
   });
 }
@@ -200,6 +225,7 @@ socket.on('show-state-change', function(msg) {
         currentShow = showValue; 
        // window.StartUp(currentShow.toString());
         window.StartUp("show"+ShowID, "-group"+GroupID);
+        
       }
   
   
@@ -295,6 +321,25 @@ var label = createElement("label",{"class":""}, LabelText ),
     newListItem = createElement("div",{"class":""},[label,div]);
   StateConfiguration.appendChild(newListItem);
   
+  
+  
+  
+  
+  var showValue = "show"+ShowID+"-"+GroupID; 
+      var Message = "Currently With Show : " + "show"+ShowID+"-group"+GroupID; 
+    if (currentShow != showValue)
+      {
+        currentShow = showValue; 
+       // window.StartUp(currentShow.toString());
+        window.StartUp("show"+ShowID, "-group"+GroupID);
+        
+      }
+  
+  
+  
+  
+  
+  
 /*
       // get dream value and add it to the list
       let newDream = dreamsForm.elements.dream.value;
@@ -348,4 +393,12 @@ var label = createElement("label",{"class":""}, LabelText ),
 // const cameraSubscriberClass =
   //    `video-container ${!activeCameraSubscribers ? 'hidden' : ''} active-${activeCameraSubscribers} ${viewingSharedScreen || sharingScreen ? 'small' : ''}`;
   
-  
+ var  mmh = new chat.MouseMoveHelper("local_show_group_box"); 
+ var  mmh_vchat = new chat.MouseMoveHelper("test-scenetemplate"); 
+ var  mmh_boxtemplate = new chat.MouseMoveHelper("movable-boxtemplate"); 
+ var  mmh_config = new chat.MouseMoveHelper("config"); 
+
+
+
+
+

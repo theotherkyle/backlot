@@ -177,7 +177,7 @@ app.get('/', (req, res) => {
 
 
 //------- ==========-------  SHOW SEQUENCES ==========------- ==========------=
-
+const ConfigClass = require('./src/config/config.js'); 
 const ShowSessionClass = require('./src/services/showsession.js');
 const GroupsClass = require('./src/services/groups.js');
 const PerformerGroupsClass = require('./src/services/performergroups.js');
@@ -185,6 +185,7 @@ const SectionsManagerClass = require('./src/services/sectionsmanager.js');
 const StagesManagerClass = require('./src/services/stagesmanager.js');
 
 //mySectionsManager.join(arg); 
+const Config = new ConfigClass(); 
 const myGroups = new GroupsClass(0);
 const myStagePerformersGroups = new PerformerGroupsClass(0);
 const mySectionsManager = new SectionsManagerClass(0);
@@ -195,7 +196,7 @@ var activeShowSessionsRef = [];
 function CreateNewShowSession (ID)
 {
   
-  var myShowSession = new ShowSessionClass(ID);
+  var myShowSession = new ShowSessionClass(ID, Config.config_Rate);
   activeShowSessions.push({"ID":ID, "State":myShowSession.getState()}); 
   activeShowSessionsRef.push({"ID":ID, "State":"", "session":myShowSession}); 
 //  myShowSession.getState();
@@ -273,6 +274,8 @@ ShowStateRequests.forEach(element => {
   app.get(element.value, (request, response) => {
       //console.log(activeShowSessionsRef);
       // express helps us take JS objects and send them as JSON
+    try  {
+    
    var  responseVals = activeShowSessionsRef [element.content].session.getState(); 
     var withStageID = 
         mySectionsManager.ShowStructure[
@@ -284,17 +287,22 @@ ShowStateRequests.forEach(element => {
   
         responseVals["WithStage"] = withStage; 
       }
-    else responseVals["WithStage"] = {};
-    
+      else responseVals["WithStage"] = {};
       response.json( responseVals); // element.content.getState());
-    });
-});
+      }
+      catch (error)
+      {
+              response.json( {"Error":"No Show"}); 
+        }
+    
+  });
+}); 
 
-
+ 
 var PulseTimeout = null; 
 var AttractionRunning = false; 
 const StartPulseRate = 500; 
-const PulseRate = 15000; 
+const PulseRate = Config.config_PulseRate; 
 const NumberOfShows = 48;   
 var CurrentShow = 0;  
 function PulseShow() 

@@ -22,34 +22,42 @@ module.exports = class sectionsmanager extends EventEmitter {
     //SLIME(10+22+6+21+16+2+10)
     
      this.Structure = {"":{Time:0, CurrentShows:[], id:-1},
-                        "0 - Arrivals":{Time:15000, CurrentShows:[], id:0},
-                       "1 - Welcome":{ Time:4000, CurrentShows:[], id:1}, 
-                        "1 - Workshop":{Time:15000, CurrentShows:[], id:2}, 
-                        "1 - Common":{ Time:2000, CurrentShows:[], id:3},  // 0
-                        "2 - Keynote":{  Time:3000, CurrentShows:[], id:3}, 
-                         "2- Orientation":{  Time:3000, CurrentShows:[], id:4}, //3 //2000
-                         "3 - Missions":{ Time:210000, CurrentShows:[], id:5}, //21 //180000
-                         "4 - Ivor":{  Time:5000, CurrentShows:[], id:6},//6
-                         "4 - Apt":{  Time:10000, CurrentShows:[], id:7},
-                         "5 - Janine":{ Time:2000, CurrentShows:[], id:8},
-                         "6 - Action":{ Time:4000, CurrentShows:[], id:9}, 
-                         "6 - Basement":{  Time:3000, CurrentShows:[], id:10}, 
-                         "Postshow":{  Time:15000, CurrentShows:[], id:11}}; 
+                        "0 - Arrivals":{Time:15, CurrentShows:[], id:0},
+                       "1 - Welcome":{ Time:4, CurrentShows:[], id:1}, 
+                        "1 - Workshop A":{Time:5, CurrentShows:[], id:2}, 
+                        "1 - Workshop B":{Time:5, CurrentShows:[], id:3}, 
+                        "1 - Workshop C":{Time:5, CurrentShows:[], id:4}, 
+                        "1 - Common":{ Time:2, CurrentShows:[], id:5},  // 0
+                        "2 - Keynote":{  Time:3, CurrentShows:[], id:6}, 
+                         "2- Orientation":{  Time:3, CurrentShows:[], id:7}, //3 //2000
+                         "3 - Missions A":{ Time:7, CurrentShows:[], id:8}, //21 //180000
+                         "3 - Missions B":{ Time:7, CurrentShows:[], id:9}, //21 //180000
+                         "3 - Missions C":{ Time:7, CurrentShows:[], id:10}, //21 //180000
+                         "4 - Ivor":{  Time:5, CurrentShows:[], id:11},//6
+                         "4 - Apt":{  Time:10, CurrentShows:[], id:12},
+                         "5 - Janine":{ Time:2, CurrentShows:[], id:13},
+                         "6 - Action":{ Time:4, CurrentShows:[], id:14}, 
+                         "6 - Basement":{  Time:3, CurrentShows:[], id:15}, 
+                         "Postshow":{  Time:15, CurrentShows:[], id:16}}; 
     
     
-  this.ShowStructure = [{"ID":"0 - Arrivals", Time:15000, troupe:0, stages:[0]},
-                   {"ID":"1 - Welcome", Time:4000, troupe:1 , stages:[1]}, 
-                   {"ID":"1 - Workshop", Time:15000, troupe:2, stages:[2]}, 
-                   {"ID":"1 - Common", Time:2000, TimeC:"00:01:00", stages:[]}, // 0
-                   {"ID":"2 - Keynote", Time:3000, troupe:3, stages:[3]}, 
-                   {"ID":"2- Orientation", Time:3000, troupe:3, stages:[]},  //3 //2000
-                   {"ID":"3 - Missions",Time:21000,  troupe:4, stages:[4,5]}, //21 //180000
-                   {"ID":"4 - Ivor", Time:5000, troupe:5, stages:[]},
-                   {"ID":"4 - Apt", Time:10000, troupe:5, stages:[6]},
-                   {"ID":"5 - Janine", Time:2000, troupe:6, stages:[7]},
-                   {"ID":"6 - Action", Time:4000, troupe:6, stages:[8]}, 
-                   {"ID":"6 - Basement", Time:3000, troupe:6, stages:[8]}, 
-                   {"ID":"Postshow", Time:15000, troupe:7, stages:[9]}, ]; 
+  this.ShowStructure = [{"ID":"0 - Arrivals", Time:15, troupe:0, stages:[0]},
+                   {"ID":"1 - Welcome", Time:4, troupe:1 , stages:[1]}, 
+                   {"ID":"1 - Workshop A", Time:5, troupe:2, stages:[2]}, 
+                   {"ID":"1 - Workshop B", Time:5, troupe:2, stages:[2]}, 
+                   {"ID":"1 - Workshop C", Time:5, troupe:2, stages:[2]}, 
+                   {"ID":"1 - Common", Time:2, TimeC:"00:01:00", stages:[]}, // 0
+                   {"ID":"2 - Keynote", Time:3, troupe:3, stages:[3]}, 
+                   {"ID":"2- Orientation", Time:3, troupe:3, stages:[]},  //3 //2000
+                   {"ID":"3 - Missions A",Time:7,  troupe:4, stages:[4,5]}, //21 //180000
+                   {"ID":"3 - Missions B",Time:7,  troupe:4, stages:[4,5]}, //21 //180000
+                   {"ID":"3 - Missions C",Time:7,  troupe:4, stages:[4,5]}, //21 //180000
+                   {"ID":"4 - Ivor", Time:5, troupe:5, stages:[]},
+                   {"ID":"4 - Apt", Time:10, troupe:5, stages:[6]},
+                   {"ID":"5 - Janine", Time:2, troupe:6, stages:[7]},
+                   {"ID":"6 - Action", Time:4, troupe:6, stages:[8]}, 
+                   {"ID":"6 - Basement", Time:3, troupe:6, stages:[8]}, 
+                   {"ID":"Postshow", Time:15, troupe:7, stages:[9]}, ]; 
     
     
     

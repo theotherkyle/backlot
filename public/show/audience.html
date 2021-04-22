@@ -50,13 +50,12 @@
     
   </head>
   <body>
-    <header>
-      <h1>Show Simulation Viewer</h1>
-    </header>
 
-    <main>
+    <header>
       
       
+    <div  class="local_show_group"  id="config" style="top:0px; left:0px;">
+
       
       <form>
       
@@ -99,27 +98,26 @@
           <em>loading dreams&hellip;</em>
         </ul>
       </section>
-    </main>
+  
+      </div>
     
     
     
-    <div id="test-scenetemplate">
-      scenetemplate
-    </div>
+    </header>
+      <main></main>
     
-    
+    <div class="local_show_group" style="top:0px;left:178px; width:250px;"  id="movable-boxtemplate">
 
-    <div id="content" class="container-fluid">
-        <div id="video-chat" style="display:block;">
+    <div id="content" class="container-fluid" style="width:250px; height:150px;">
+        <div id="video-chat" style="display:block; width:250px;">
             <div id="loading"></div>
-            <div class="row table-row">
-                <div class="col-sm-12 col-md-12 col-lg-8">
+            <div class="row table-row" >
+                <div class="col-sm-12 col-md-12 col-lg-8" style="visibility:hidden; height:0px; width:0px">
                     <div class="embed-responsive embed-responsive-16by9">
                         <div id="video" class="embed-responsive-item"><a href="#" id="fullscreen"><i id="fullscreen-icon" class="fa fa-expand"></i></a></div>
                     </div>
                 </div>
-                <div class="col-sm-12 col-md-12 col-lg-4">
-                    <div class="row"><br /></div>
+                <div >
                     <div class="row">
                         <div class="col-md-11">
                             <div class="btn-toolbar" role="toolbar">
@@ -142,12 +140,12 @@
                             <select id="videoDeviceList"></select>
                         </div>
                     </div>
-                    <div class="row" style="height:75%;">
-                        <div class="col-md-11" style="height:100%">
-                            <div class="well" id="eventLog" style="height:100%;overflow-y:scroll;"></div>
+                    <div class="row" style="height:0%; visibility:hidden;">
+                        <div class="col-md-11" style="height:0%;">
+                            <div class="well" id="eventLog" style="height:0%;min-height: 0px;padding:0px; margin:0px; overflow-y:scroll;"></div>
                         </div>
                     </div>
-                    <div class="row" style="padding-top:20px;">
+                    <div class="row" style="height:0%;min-height: 0px;padding:0px; margin:0px;visibility:hidden;">
                         <div class="col-md-11">
                             <div class="input-group">
                                 <input id="sendInput" type="text" class="form-control" placeholder="Message...">
@@ -166,12 +164,17 @@
 
     <div id="log" style="display: none"></div>
 
-       
+    </div>
     
+    <div class="local_show_group"  id="test-scenetemplate" style="left:0px;width:1280px;">
+      scenetemplate
+    </div>
   
+  <div class="local_show_group" id="local_show_group_box" style="left:1000px;top:0px;">   <canvas id="local_show_group_canvas" width="150" height="720"></canvas> </div>
+    
 <div class="ticker-wrap">
 <div class="ticker">
-  <div class="ticker__item">   <canvas id="canvas" width="200" height="40"></canvas> </div>
+  <div class="ticker__item">   <canvas id="arena_canvas" width="200" height="40"></canvas> </div>
   <div class="ticker__item"> Who you gonna call ? </div>
    <!--<div class="ticker__item">Authentic bitters seitan pug single-origin coffee whatever.</div>
   <div class="ticker__item">Letterpress chambray brunch.</div>
@@ -232,8 +235,6 @@
     
     
     
-
-    <footer></footer>
 
   </body>
 </html>
