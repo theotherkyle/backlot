@@ -16,8 +16,9 @@ var chat;
             this.peerConnections = {};
             this.remoteMediaMaps = {};
             this.localMedia = null;
+            this.localMedia3 = null;
             this.layoutManager = null;
-            this.videoLayout = null;
+            this.videoLayout = [null,null];
             this.audioOnly = false;
             this.receiveOnly = false;
             this.simulcast = false;
@@ -60,11 +61,95 @@ var chat;
             this.userName = userName;
         };
       
-      
-    
 
-        App.prototype.startLocalMedia = function (videoContainer, captureScreen, audioOnly, receiveOnly, simulcast, audioDeviceList, videoDeviceList) {
+       //   App.prototype.startLocalMediaWImage  = function (videoContainer, captureScreen, audioOnly, receiveOnly, simulcast, audioDeviceList, videoDeviceList) {
+       
+     App.prototype.startLocalMediaWImage  = function () {
+         
+        var promise = new fm.liveswitch.Promise();   
+           var _this = this; 
+     //   this.layoutManager = new fm.liveswitch.DomLayoutManager(videoContainer);
+       var audio = true;
+
+          var canvas = document.getElementById('localCanvasSource');
+      var canvasFrameRate = 3;
+if (!canvas) {
+    // Create the canvas if it doesn't exist yet.
+    canvas = document.createElement('canvas');
+  
+  canvas.crossOrigin = "Anonymous";
+ // canvas.setAttribute(crossOrigin="anonymous")
+    canvas.id = 'localCanvasSource';
+    canvas.style.position = 'absolute';
+    document.body.appendChild(canvas);
+    // Load a static image.
+    var image = new Image();
+  
+  image.crossOrigin = "Anonymous";
+    image.onload = function() {
+        // Resize the canvas to match the image size.
+        canvas.width = 1280;// image.width;
+        canvas.height = 720;// image.height;
+        canvas.style.left =  image.width + 'px';
+        canvas.style.top = image.height + 'px';
+        // Draw the initial image.
+        var context = canvas.getContext('2d');
+        //context.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+        // Refresh the image on a regular interval
+var audio = false;
+var video =canvas.captureStream(30);
           
+      //    canvas.captureStream(30).getVideoTracks()[0];
+ _this.localMedia3  = new fm.liveswitch.LocalMedia(audio, video);    
+     //  var video = new fm.liveswitch.VideoConfig(this.videoWidth, this.videoHeight, this.videoFps);
+       //  this.localMedia = new fm.liveswitch.LocalMedia(audio, video, false);
+        _this.localMedia3.start().then(
+            o => {
+              
+                  var lm = _this.layoutManager;
+            if (lm != null) {
+                var videoPreview = lm.getLocalView();
+                if (!videoPreview) {
+                    return false;
+                }
+                var video =    videoPreview.firstChild ;
+        window.setInterval(function() {
+            //context.clearRect(0, 0, canvas.width, canvas.height);
+          //  context.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+                         
+              
+context.beginPath();
+context.rect(0,0, canvas.width, canvas.height);
+context.fillStyle = "red";
+context.fill();
+    
+          
+          
+            _this.drawIntoCanvas(video, context); 
+          
+        }, 30);
+            }
+              
+              
+          /*      var localView = _this.localMedia.getView();
+                if (localView != null) {
+                    localView.id = "localView";
+                    _this.layoutManager.setLocalView(localView);
+                   
+                } */
+                promise.resolve(null);      
+            },
+            ex => {
+                fm.liveswitch.log.debug("error", ex);
+            }
+        );
+    }  
+              image.src = 'https://cdn.glitch.com/bf2313d4-5d97-4ee7-90d5-577c2ed80e8a%2FSLIME-boards.MissionsB.jpeg?v=1618759015966';
+    };  
+        return promise;
+   };
+      
+        App.prototype.startLocalMedia = function (videoContainer, captureScreen, audioOnly, receiveOnly, simulcast, audioDeviceList, videoDeviceList) {
           
             if (audioDeviceList) {
                         audioDeviceList.options.length = 0;
@@ -72,26 +157,19 @@ var chat;
                     if (videoDeviceList) {
                         videoDeviceList.options.length = 0;
                     }
-          
-          
-        var promise = new fm.liveswitch.Promise();
+        var promise = new fm.liveswitch.Promise();   
+           var _this = this; 
         this.layoutManager = new fm.liveswitch.DomLayoutManager(videoContainer);
        /* this.localMedia = new fm.liveswitch.LocalMedia(
             true,
             new fm.liveswitch.VideoConfig(640, 480, 30),
             false
         );*/
-          
        var audio = true;
-        var video = new fm.liveswitch.VideoConfig(this.videoWidth, this.videoHeight, this.videoFps);
-         this.localMedia = new fm.liveswitch.LocalMedia(audio, video, false);
-          
-          
-        this.localMedia.start().then(
+         var video = new fm.liveswitch.VideoConfig(this.videoWidth, this.videoHeight, this.videoFps);
+        this.localMedia = new fm.liveswitch.LocalMedia(audio, video, false);
+        _this.localMedia.start().then(
             o => {
-              
-              
-              
               // Audio device selection.
                             if (audioDeviceList) {
                                 audioDeviceList.options.length = 0;
@@ -125,27 +203,23 @@ var chat;
                                 }
                             }
               
+             
               
-              
-              
-              
-              
-              
-              
-              
-                var localView = this.localMedia.getView();
+                var localView = _this.localMedia.getView();
                 if (localView != null) {
                     localView.id = "localView";
-                    this.layoutManager.setLocalView(localView);
+                    _this.layoutManager.setLocalView(localView);
                 }
                 promise.resolve(null);
+              //this.startLocalMediaWImage(); 
             },
             ex => {
                 fm.liveswitch.log.debug("error", ex);
             }
-        );
+        );  
         return promise;
-    };
+   };
+
           
            
         App.prototype.stopLocalMedia = function () {
@@ -259,13 +333,13 @@ var chat;
             });
             return promise;
         };
-        var channel_i=0; 
+        //var channel_i=0; 
         App.prototype.onClientRegistered = function (channels, incomingMessage, peerLeft, peerJoined, clientRegistered) {
             var _this = this;
-            for (channel_i=0; channel_i<2; channel_i++)
+            for ( var channel_i=0; channel_i<2; channel_i++)
            {
             this.channel[channel_i] = channels[channel_i];
-             
+             var interior_channel = channel_i; 
           
           
             // Monitor the channel remote client changes.
@@ -311,10 +385,14 @@ var chat;
                 incomingMessage(n, message);
             });
             if (this.mode == Mode.Mcu) {
+              var openMCU = function ()
+              {
+              var _this_channel = channel_i; 
                 // Monitor the channel video layout changes.
-                this.channel[channel_i].addOnMcuVideoLayout(function (videoLayout) {
+                _this.channel[_this_channel].addOnMcuVideoLayout(function (videoLayout) {
                     if (!_this.receiveOnly) {
-                        _this.videoLayout = videoLayout;
+                        _this.channel[_this_channel];
+                        _this.videoLayout[_this_channel] = videoLayout;
                         // Force a layout in case the local video preview needs to move.
                         var lm = _this.layoutManager;
                         if (lm != null) {
@@ -323,7 +401,9 @@ var chat;
                     }
                 });
                 // Open an MCU connection.
-                this.openMcuConnection();
+                _this.openMcuConnection(channel_i);
+              }
+              openMCU(); 
             }
             else if (this.mode == Mode.Sfu) {
                 if (!this.receiveOnly) {
@@ -364,7 +444,7 @@ var chat;
                 return fm.liveswitch.Promise.resolveNow(null);
             }
         };
-        App.prototype.openMcuConnection = function (tag) {
+        App.prototype.openMcuConnection = function (channel_i, tag) {
             var _this = this;
             // Create remote media to manage incoming media.
             var remoteMedia = new fm.liveswitch.RemoteMedia();
@@ -392,6 +472,7 @@ var chat;
                 connection = this.channel[channel_i].createMcuConnection(audioStream, dataStream);
             }
             else {
+                //var videoStream = new fm.liveswitch.VideoStream(this.localMedia3, remoteMedia);
                 var videoStream = new fm.liveswitch.VideoStream(this.localMedia, remoteMedia);
                 if (this.receiveOnly) {
                     videoStream.setLocalDirection(fm.liveswitch.StreamDirection.ReceiveOnly);
@@ -445,7 +526,7 @@ var chat;
             // Float the local preview over the mixed video feed for an improved user experience.
             this.layoutManager.addOnLayout(function (layout) {
                 if (_this.mcuConnection != null && !_this.receiveOnly && !_this.audioOnly) {
-                   // fm.liveswitch.LayoutUtility.floatLocalPreview(layout, _this.videoLayout, _this.mcuConnection.getId(), _this.mcuViewId, _this.localMedia.getVideoSink());
+                //    fm.liveswitch.LayoutUtility.floatLocalPreview(layout, _this.videoLayout[0], _this.mcuConnection.getId(), _this.mcuViewId, _this.localMedia.getVideoSink());
                 }
             });
             // Open the connection.
@@ -951,6 +1032,192 @@ var chat;
             }
             return config.getLocalAudioMuted();
         };
+      
+        App.prototype.drawIntoCanvas = function (video, ctx) {
+                 
+    //    var vl_regions =     __this.videoLayout.getRegions(); 
+              var ctx_x = 0; 
+                 // var vl_frame =  vl_regions[vl_i].getFrame(); 
+                  //var vl_bounds =  vl_regions[vl_i].getBounds(); 
+                  var x = 0,// vl_frame.getX() + vl_bounds.getX(), 
+                      y = 0,//  vl_frame.getY() + vl_bounds.getY(), 
+                      width = 640,// vl_bounds.getWidth(), 
+                      height = 480,
+                      ticker_width = 640, 
+                      ticker_height = 480;// vl_bounds.getHeight(); 
+                  
+      //context.drawImage(img, sx, sy, swidth, sheight, x, y, width, height);
+        ctx.drawImage(video, x, y, width, height, ctx_x, 0, ticker_width, ticker_height);
+               //   ctx_x += ticker_width; 
+               
+        
+        }
+      
+      App.prototype.DrawTeamAsCanvas = function (canvasID, remoteView, width, height) //local_show_group_canvas, 0
+      {
+       
+            var canvas = document.getElementById(canvasID);    
+            var ctx = canvas.getContext('2d');
+            var ticker_width = width; 
+            var ticker_height = height; 
+            ctx.canvas.width  =  ticker_width; 
+            ctx.canvas.height  = 6 * ticker_height; 
+            var __this = this; 
+              
+
+              function getLayOut()
+              {
+                 var lm = __this.layoutManager;
+                  if (lm != null && __this.videoLayout[1] !=null) {
+                   var videoPreview = lm.getLocalView();
+                       if (!videoPreview) {
+                         return false;
+                        }
+                       var remoteviewID = lm.doGetRemoteViewsIds();
+                    if (remoteviewID.length>0)
+                      {
+                       var remoteviews =   lm.doGetRemoteViews(remoteviewID[remoteView]);
+                         return remoteviews[0].firstChild ;
+                      }
+
+                  }
+                return null; 
+              }
+
+              
+              function loop_local() {
+                var video =  getLayOut(); 
+                var x = 0; 
+                var ctx_y = 0; 
+                
+                if (video)
+                  {
+                  var vl_regions =     __this.videoLayout[1].getRegions(); 
+                  x =  vl_regions.length; 
+                        for (var vl_i=0; vl_i <  vl_regions.length; vl_i++)
+                          {
+                            
+                            var vl_frame =  vl_regions[vl_i].getFrame(); 
+                            var vl_bounds =  vl_regions[vl_i].getBounds(); 
+                            var x = vl_frame.getX() + vl_bounds.getX(), 
+                                y = vl_frame.getY() + vl_bounds.getY(), 
+                                width = vl_bounds.getWidth(), 
+                                height = vl_bounds.getHeight();   
+                //context.drawImage(img, sx, sy, swidth, sheight, x, y, width, height);
+                  ctx.drawImage(video, x, y, width, height, 0, ctx_y, ticker_width, ticker_height);
+                            ctx_y += ticker_height; 
+                          }
+                  
+                
+                  }
+                        for (var vl_i=x; vl_i <  6; vl_i++)
+                          {
+
+                            
+                            
+                            ctx.beginPath();
+                            ctx.rect(0, ctx_y, ticker_width, ticker_height);
+                            ctx.fillStyle = "red";
+                            ctx.fill();   
+                            ctx.beginPath();         
+                            ctx.rect(0, ctx_y, ticker_width, 10);
+                            ctx.fillStyle = "silver";
+                            ctx.fill();            
+                            ctx.font = "60px Arial";
+                            ctx.strokeText(vl_i+1, 5, ctx_y+80);
+                            
+                            
+                            ctx_y += ticker_height; 
+                          }
+                  setTimeout(loop_local, 1000 / 30); // drawing at 30fps
+                }
+                loop_local() ; 
+        };
+      
+      
+          App.prototype.DrawArenaAsCanvas = function (canvasID, remoteView, width, height) //local_show_group_canvas, 0
+      {
+      
+                var canvas = document.getElementById(canvasID);    
+            var ctx = canvas.getContext('2d');
+            var ticker_width = width; 
+            var ticker_height = height; 
+            ctx.canvas.width  =  60 * ticker_width; 
+            ctx.canvas.height  = ticker_height; 
+            var __this = this; 
+              
+
+              function getLayOut()
+              {
+                 var lm = __this.layoutManager;
+                  if (lm != null && __this.videoLayout[1] !=null) {
+                   var videoPreview = lm.getLocalView();
+                       if (!videoPreview) {
+                         return false;
+                        }
+                       var remoteviewID = lm.doGetRemoteViewsIds();
+                    if (remoteviewID.length>0)
+                      {
+                       var remoteviews =   lm.doGetRemoteViews(remoteviewID[remoteView]);
+                         return remoteviews[0].firstChild ;
+                      }
+
+                  }
+                return null; 
+              }
+
+              
+              function loop_local() {
+                var video =  getLayOut(); 
+                var x = 0; 
+                var ctx_x = 0; 
+                
+                if (video)
+                  {
+                  var vl_regions =     __this.videoLayout[0].getRegions(); 
+                  x =  vl_regions.length; 
+                        for (var vl_i=0; vl_i <  vl_regions.length; vl_i++)
+                          {
+                            
+                            var vl_frame =  vl_regions[vl_i].getFrame(); 
+                            var vl_bounds =  vl_regions[vl_i].getBounds(); 
+                            var x = vl_frame.getX() + vl_bounds.getX(), 
+                                y = vl_frame.getY() + vl_bounds.getY(), 
+                                width = vl_bounds.getWidth(), 
+                                height = vl_bounds.getHeight();   
+                //context.drawImage(img, sx, sy, swidth, sheight, x, y, width, height);
+                  ctx.drawImage(video, x, y, width, height, ctx_x, 0, ticker_width, ticker_height);
+                            ctx_x += ticker_width; 
+                          }
+                  
+                
+                  }
+                        for (var vl_i=x; vl_i <  60; vl_i++)
+                          {
+
+                            
+                            
+                            ctx.beginPath();
+                            ctx.rect(ctx_x, 0, ticker_width, ticker_height);
+                            ctx.fillStyle = "red";
+                            ctx.fill();   
+                            ctx.beginPath();         
+                            ctx.rect(ctx_x, 0, 10, ticker_height);
+                            ctx.fillStyle = "silver";
+                            ctx.fill();            
+                            ctx.font = "30px Arial";
+                            ctx.strokeText(vl_i+1, ctx_x+20, 75);
+                            
+                            
+                            ctx_x += ticker_width; 
+                          }
+                  setTimeout(loop_local, 1000 / 30); // drawing at 30fps
+                }
+                loop_local() ; 
+          
+      }
+      
+      
         App.prototype.toggleVideoPreview = function () {
             var lm = this.layoutManager;
             if (lm != null) {
@@ -958,11 +1225,81 @@ var chat;
                 if (!videoPreview) {
                     return false;
                 }
-                if (videoPreview.style.display == 'none') {
+              
+             // this.DrawTeamAsCanvas("local_show_group_canvas", 0, 150, 120);
+ 
+  var canvas = document.getElementById('arena_canvas');    
+  var ctx = canvas.getContext('2d');
+             ctx.canvas.width  = 200; 
+             ctx.canvas.height  = 40; 
+  //document.getElementById('video');
+      var remoteviewID = lm.doGetRemoteViewsIds();
+              
+            var remoteviews =   lm.doGetRemoteViews(remoteviewID[0]);
+  var video =    remoteviews[0].firstChild ;
+              
+              //https://developer.liveswitch.io/reference/ts/api/classes/fm.liveswitch.videolayoutregion.html
+         
+                  
+                  var __this = this; 
+                   
+             // videoPreview.firstChild  ;
+
+ // video.addEventListener('play', function() 
+              {
+   //var $this = this; //cache
+                
+                var ticker_width = 100; 
+                var ticker_height = 100; 
+    function loop() {
+        var vl_regions =     __this.videoLayout[1].getRegions(); 
+            ctx.canvas.width  = vl_regions.length * ticker_width; 
+            ctx.canvas.height  = ticker_height; 
+          var ctx_x = 0; 
+              for (var vl_i=0; vl_i <  vl_regions.length; vl_i++)
+                {
+                  var vl_frame =  vl_regions[vl_i].getFrame(); 
+                  var vl_bounds =  vl_regions[vl_i].getBounds(); 
+                  var x = vl_frame.getX() + vl_bounds.getX(), 
+                      y = vl_frame.getY() + vl_bounds.getY(), 
+                      width = vl_bounds.getWidth(), 
+                      height = vl_bounds.getHeight(); 
+                  
+                  
+              
+//ctx.beginPath();
+//ctx.rect(x, y, width, height);
+//ctx.fillStyle = "red";
+//ctx.fill();
+    
+                  
+                  
+      //context.drawImage(img, sx, sy, swidth, sheight, x, y, width, height);
+        ctx.drawImage(video, x, y, width, height, ctx_x, 0, ticker_width, ticker_height);
+                  ctx_x += ticker_width; 
+                    
+                }
+      
+            // 
+      //if (!$this.paused && !$this.ended) {
+//        ctx.drawImage(video, 0, 0);
+        setTimeout(loop, 1000 / 30); // drawing at 30fps
+      }
+                loop() ; 
+    };//)();
+  //}, 0);
+//});
+              
+               // var layout = lm.getLayout(320, 240, videoPreview, 0, null, null, null);
+               
+               //var localFrame = layout.getLocalFrame();
+               // localFrame.setX(0); 
+               if (videoPreview.style.display == 'none') {
                     videoPreview.style.display = '';
                     return true;
                 }
                 videoPreview.style.display = 'none';
+              
                 return false;
             }
             else {
@@ -973,7 +1310,8 @@ var chat;
             return this.localMedia.changeAudioSourceInput(new fm.liveswitch.SourceInput(id, name));
         };
         App.prototype.changeVideoDevice = function (id, name) {
-            return this.localMedia.changeVideoSourceInput(new fm.liveswitch.SourceInput(id, name));
+          var input = new fm.liveswitch.SourceInput(id, name); 
+            return this.localMedia.changeVideoSourceInput(input);
         };
         App.prototype.toggleSendEncoding = function (sender) {
             var index = sender.index;

@@ -27,6 +27,58 @@ function createElement(element, attribute, inner) {
 function filterById(jsonObject, id) {return jsonObject.filter(function(jsonObject) {return (jsonObject['id'] == id);})[0];}
 
 
+var chat;
+(function (chat) {
+    var MouseMoveHelper = /** @class */ (function () {
+        var mmh ; 
+        function MouseMoveHelper(divID) {
+          mmh = this; 
+          var mmh_id = this; 
+             this.mousePosition;
+           this.offset = [0,0];
+        
+           this.isDown = false;
+
+            this.div = document.getElementById(divID);
+
+
+              this.div.addEventListener('mousedown', function(e) {
+                 mmh_id.isDown  = true;
+               
+                  mmh_id.offset = [
+                    mmh_id.div.offsetLeft - e.clientX,
+                    mmh_id.div.offsetTop - e.clientY
+                ];
+            }, true);
+      
+
+        document.addEventListener('mouseup', function() {
+             mmh_id.isDown  = false;
+        }, true);
+
+        document.addEventListener('mousemove', function(event) {
+            event.preventDefault();
+            if ( mmh_id.isDown ) {
+                 mmh_id.mousePosition = {
+
+                    x : event.clientX,
+                    y : event.clientY
+
+                };
+                mmh_id.div.style.left = ( mmh_id.mousePosition.x +  mmh_id.offset[0]) + 'px';
+                mmh_id.div.style.top  = ( mmh_id.mousePosition.y +  mmh_id.offset[1]) + 'px';
+            }
+        }, true);
+           }
+      return MouseMoveHelper; 
+  
+   }()); 
+    chat.MouseMoveHelper = MouseMoveHelper;
+})(chat || (chat = {}));
+
+
+
+
 
 // o: container to set the innerHTML
 // html: html text to set.

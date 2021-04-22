@@ -29,6 +29,11 @@ fm.liveswitch.Util.addOnLoad(function () {
     // Create new App.
     var app = new chat.App(document.getElementById('log'));
     window.App = app;
+  
+  app.DrawTeamAsCanvas("local_show_group_canvas", 1, 150, 120);
+  app.DrawArenaAsCanvas("arena_canvas", 0, 120, 90);
+  
+    
     // Create a random 6 digit number for the new channel ID.
     //nameInput.value = 'Anonymous';
    // startSessionInput.value = (Math.floor(Math.random() * 900000) + 100000).toString();
@@ -210,6 +215,10 @@ fm.liveswitch.Util.addOnLoad(function () {
             fm.liveswitch.Log.info('Registering...');
             app.setUserName("Anonymous");
             app.joinAsync(incomingMessage, peerLeft, peerJoined, clientRegistered).then(function (o) {
+              
+              
+              
+           //   app.DrawTeamAsCanvas("local_show_group_canvas", 0, 150, 120);
               
                // enterNewChannelNoExit(channelId+groupId);
                 fm.liveswitch.Log.info('Registered.');

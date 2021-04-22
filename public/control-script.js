@@ -271,8 +271,8 @@ function appendNewStructureElement(tap, strings, DivConfiguration) {
   if (tap.State == strings.state) LabelText = tap.ID;
   var grps = 0; 
   var aud = 0; 
-  
-  var totalTime  = tap.Time.toTime() ;
+  var tTime = tap.Time*1000*60; 
+  var totalTime  = tTime.toTime() ;
   
   /* if(ShowsGroups[tap.ID])
      {
