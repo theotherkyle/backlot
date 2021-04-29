@@ -144,6 +144,122 @@ app.get('/enroll', (req, res) => {
 
  
 
+
+
+
+
+
+//------- ==========-------  APARTMENT BUILDING SEQUENCES ==========------- ==========------=
+
+
+
+
+const AdventureBuildingClass = require('./src/EscapeContent/multiroom.js');
+
+const AdventureBuilding = new AdventureBuildingClass(1);
+
+
+app.get('/AdventureBuilding' , (req, res) => {
+  
+  
+   res.json(AdventureBuilding.getBuildingMap()); 
+  
+
+});
+
+var PlayersBuildingState = {}; 
+var BuildingState = {}; 
+// PlayerID
+
+  function ConfigureApartmentSceneSockets(socket)
+  {
+        socket.on('join-building-scene', (msg) => 
+       {
+          //{"ShowID":ShowID,"GroupID":GroupID,"PlayerID":PlayerID}
+          DebugServerConsole('joining building scene'); 
+          socket.join("building-scene"); 
+          //PlayersBuildingState[socket.id].color = 
+          
+           
+      }); 
+    
+    
+    
+   socket.on('disconnect', function() {
+      console.log('Got disconnect!');
+     
+     
+     // PlayersBuildingState.remove(socket.id); 
+     
+     delete PlayersBuildingState[socket.id];
+      io.in("building-scene").emit('BuildingStateChange', {"room":"", "Players":PlayersBuildingState});
+        
+     
+
+   //   var i = allClients.indexOf(socket);
+    //  allClients.splice(i, 1);
+   });
+    
+    
+    
+       socket.on('move-rooms', (msg) => 
+       {
+          //{"ShowID":ShowID,"GroupID":GroupID,"PlayerID":PlayerID}
+          DebugServerConsole('move-rooms'); 
+          DebugServerConsole(socket.id); 
+          DebugServerConsole( PlayersBuildingState[socket.id] ); 
+          DebugServerConsole( msg.room ); 
+          //socket.join("building-scene"); 
+         PlayersBuildingState[socket.id] = msg.room;
+         
+          DebugServerConsole( "inserted :  " + PlayersBuildingState[socket.id] ); 
+         
+         var roomURL =  AdventureBuilding.retrieveRoomURL(msg.room); 
+         
+           socket.emit("enter-room", {"roomURL":roomURL})
+         
+          // sending to all clients in 'game' room(channel) except sender
+         // socket.broadcast.to("building-scene").emit('BuildingStateChange', {"room":msg.room, "Players":PlayersBuildingState});
+          io.in("building-scene").emit('BuildingStateChange', {"room":msg.room, "Players":PlayersBuildingState});
+         
+         //         io.in("building-scene").emit('BuildingStateChange', BuildingState);
+         
+      }); 
+    
+    
+    
+  }
+
+
+ function EmitBuildingStateChange ()
+{ 
+    //DebugServerConsole("EmitAttractionState"); 
+      io.in("building-scene").emit('BuildingStateChange', BuildingState);
+    
+     
+  if (AttractionRunning)
+    {
+      setTimeout(EmitBuildingStateChange, 1000);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+//------- ==========-------  APARTMENT BUILDING  SEQUENCES ==========------- ==========------=
+
+
+
+
+
+
 /*
  * User Routes
  */
@@ -423,6 +539,15 @@ function EmitPhrasePulse()
 
 io.on('connection', (socket) => {
   DebugServerConsole('a user connected');
+  
+  
+  ConfigureApartmentSceneSockets(socket); 
+  
+  
+  
+  
+  
+  
   
   socket.on('join-controllers', (msg) => 
  {
