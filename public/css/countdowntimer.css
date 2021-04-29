@@ -1,0 +1,29 @@
+
+h1 {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 80px;
+  margin-bottom: 5px;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+p{
+  font-family: 'Allerta Stencil', sans-serif;
+  font-size: 70px;
+  margin: 15px auto;
+  border: 2px #eee dotted;
+  width: 350px;
+  text-align: left;
+  padding: 10px;
+}
+
+button {
+  font-size: 15px;
+  border-radius: 3px;
+}
+
+#extra-min {
+  margin-left: 10%;
+}

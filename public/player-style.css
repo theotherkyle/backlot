@@ -10,6 +10,161 @@
 }
 
 
+.rooms
+{
+   //border: 1px solid red;
+  
+   
+}
+
+
+
+  .pacman {
+      width: 0px;
+      height: 0px;
+    display: inline-block; 
+     // border-right: 10px solid transparent;
+      border-top: 10px solid gold;
+      border-left: 10px solid gold;
+      border-bottom: 10px solid gold;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+
+  .pacman_1 {
+      border-top: 10px solid gold;
+      border-left: 10px solid gold;
+      border-bottom: 10px solid gold;
+    }
+  .pacman_2 {
+      border-top: 10px solid green;
+      border-left: 10px solid green;
+      border-bottom: 10px solid green;
+    }
+  .pacman_3 {
+      border-top: 10px solid red;
+      border-left: 10px solid red;
+      border-bottom: 10px solid red;
+    }
+  .pacman_4 {
+      border-top: 10px solid silver;
+      border-left: 10px solid silver;
+      border-bottom: 10px solid silver;
+    }
+  .pacman_5 {
+      border-top: 10px solid black;
+      border-left: 10px solid black;
+      border-bottom: 10px solid black;
+    }
+  .pacman_6 {
+      border-top: 10px solid pink;
+      border-left: 10px solid pink;
+      border-bottom: 10px solid pink;
+    }
+
+
+
+
+
+
+
+
+.grid-container {
+  display: inline-grid;
+  grid-template-columns: auto auto auto auto auto auto auto;
+  background-color: #2196F3;
+  padding: 10px;
+}
+
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+}
+
+
+
+
+
+.color_tile
+{
+  
+  // border: 1px solid silver;
+  width:50px;
+  height:50px; 
+  
+  background-color: red;
+  
+  
+}
+
+.tile
+{
+  
+   //border: 1px solid silver;
+  width:50px;
+  height:50px; 
+  
+  background-color: #071a38;
+}
+
+.game-column
+{
+   display: table-cell;
+}
+
+#CurrentRoomConfiguration
+{
+  width: 350px; 
+}
+
+#CurrentRoomOptions > * {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.connnection-room-label {
+    display: inline-grid; 
+    text-align: center;
+    border: 2px solid silver;
+    margin-right: 0.25em;
+    margin-bottom: 0.25em;
+    align: center;
+    width: 80px;
+}
+
+.connnection-room-label
+{
+   border: 3px solid silver;
+  width:65px;
+  height:65px; 
+  
+  background-color: #ddd;
+  
+}
+
+.room-label
+{
+   border: 1px solid silver;
+  width:50px;
+  height:50px; 
+  
+  background-color: #ddd;
+  
+}
+
+.room-container
+{
+   border: 1px solid red;
+  
+  display: inline;
+   
+}
 .local_show_group
 {
   
